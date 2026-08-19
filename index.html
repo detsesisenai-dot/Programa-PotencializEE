@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potencializa - Diagnóstico de Eficiência Energética</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Adicionando D3.js para o Gráfico de Evolução -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        apple: {
+                            gray: '#f5f5f7',
+                            dark: '#1d1d1f',
+                            blue: '#0066cc',
+                            blueHover: '#0077ed',
+                            green: '#34c759',
+                            orange: '#ff9500'
+                        }
+                    },
+                    boxShadow: {
+                        'apple': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'apple-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+
+        /* Estilização do Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #0066cc;
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #d2d2d7;
+            border-radius: 2px;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        .selectable-card {
+            transition: all 0.3s ease;
+        }
+        .selectable-card.selected {
+            border-color: #0066cc;
+            background-color: #f0f8ff;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+        }
+        
+        .progress-bar-fill {
+            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Estilos adicionais para imagens nos botões e gráfico */
+        .segment-btn-img {
+            transition: all 0.4s ease;
+            filter: grayscale(80%) brightness(0.7);
+        }
+        .segment-btn.selected .segment-btn-img {
+            filter: grayscale(0%) brightness(0.9);
+            transform: scale(1.05);
+        }
+        .segment-btn.selected {
+            border-color: #0066cc;
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
+        }
+        
+        .d3-tooltip {
+            position: absolute;
+            text-align: left;
+            padding: 10px 14px;
+            font: 12px 'Inter', sans-serif;
+            background: #1d1d1f;
+            color: white;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+            width: max-content;
+            max-width: 220px;
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans overflow-x-hidden pb-20">
+
+    <nav class="w-full bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center relative">
+                
+                <div class="flex items-center gap-2 z-10">
+                    <i class="fa-solid fa-leaf text-apple-green text-2xl"></i>
+                    <span class="font-bold text-xl tracking-tight text-apple-dark hidden md:block">Programa <span class="text-apple-blue">Potencializa</span></span>
+                </div>
+                
+                <!-- Logo no Canto Superior Direito -->
+                <div class="flex items-center z-10 py-2">
+                    <img src="https://i.postimg.cc/rwhZMbgj/Senai-Hub.png" alt="Senai Hub" class="h-10 md:h-12 object-contain drop-shadow-sm">
+                </div>
+                
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+        
+        <!-- HEADER TEXT -->
+        <div class="text-center mb-16 fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-apple-dark mb-4">
+                Descubra o potencial de <br>economia da sua indústria.
+            </h1>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto mb-6">
+                Preencha os dados abaixo e veja como a otimização de utilidades industriais pode reduzir custos e aumentar sua competitividade de forma inteligente.
+            </p>
+            <div class="bg-blue-50 text-apple-blue border border-blue-100 rounded-2xl p-5 max-w-3xl mx-auto text-sm text-left flex flex-col sm:flex-row items-start gap-4 shadow-sm hover:shadow-md transition">
+                <div class="bg-white p-2 rounded-full shadow-sm shrink-0">
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                </div>
+                <div>
+                    <strong class="block mb-1 text-base">Como funciona este diagnóstico interativo?</strong>
+                    <p class="text-gray-600 leading-relaxed mb-2">
+                        Este simulador foi criado com base em dados reais de auditorias e estudos técnicos (como relatórios do SENAI em plantas reais, como a Empresa A e Empresa B). Ele cruza o seu <b>segmento industrial</b> com as <b>cargas alvo selecionadas</b> para projetar ociosidades e desperdícios térmicos ou elétricos.
+                    </p>
+                    <p class="bg-blue-100/50 p-2 rounded-lg inline-block text-apple-blue font-medium mt-1">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                        <b>Nota importante:</b> Os valores calculados abaixo são <span class="underline">estimativas aproximadas</span> com foco estritamente didático para apoiar sua tomada de decisão estratégica.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="setup-section" class="glass-card rounded-3xl shadow-apple p-8 md:p-12 mb-12 fade-in delay-100">
+            
+            <!-- Segmento Industrial -->
+            <div class="mb-10">
+                <label class="block text-sm font-semibold text-gray-900 uppercase tracking-wider mb-1">1. Qual o seu segmento de atuação?</label>
+                <p class="text-xs text-gray-500 mb-4">Diferentes indústrias possuem matrizes energéticas distintas (Ex: frigoríficos concentram o peso na refrigeração, usinas no vapor).</p>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="alimentos">
+                        <img src="https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?auto=format&fit=crop&w=400&q=80" alt="Alimentos" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                        <div class="relative z-20 p-3 w-full text-center">
+                            <i class="fa-solid fa-utensils text-white/80 text-xl mb-1 block"></i>
+                            <span class="text-xs font-semibold text-white drop-shadow-md">Alimentos & Bebidas</span>
+                        </div>
+                    </button>
+                    <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="metalmecanica">
+                        <img src="https://images.unsplash.com/photo-1565514020179-026b92b84bb6?auto=format&fit=crop&w=400&q=80" alt="Metalmecânica" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                        <div class="relative z-20 p-3 w-full text-center">
+                            <i class="fa-solid fa-gears text-white/80 text-xl mb-1 block"></i>
+                            <span class="text-xs font-semibold text-white drop-shadow-md">Metalmecânica</span>
+                        </div>
+                    </button>
+                    <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="vestuario">
+                        <img src="https://images.unsplash.com/photo-1558024920-b41e1887dc32?auto=format&fit=crop&w=400&q=80" alt="Vestuário" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                        <div class="relative z-20 p-3 w-full text-center">
+                            <i class="fa-solid fa-shirt text-white/80 text-xl mb-1 block"></i>
+                            <span class="text-xs font-semibold text-white drop-shadow-md">Vestuário</span>
+                        </div>
+                    </button>
+                    <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="quimico">
+                        <img src="https://images.unsplash.com/photo-1532187863486-abf9db090b82?auto=format&fit=crop&w=400&q=80" alt="Químico" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                        <div class="relative z-20 p-3 w-full text-center">
+                            <i class="fa-solid fa-flask text-white/80 text-xl mb-1 block"></i>
+                            <span class="text-xs font-semibold text-white drop-shadow-md">Químico / Farm.</span>
+                        </div>
+                    </button>
+                    <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="sucroenergetico">
+                        <img src="https://images.unsplash.com/photo-1625244724120-1fd1d6722241?auto=format&fit=crop&w=400&q=80" alt="Sucroenergético" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                        <div class="relative z-20 p-3 w-full text-center">
+                            <i class="fa-solid fa-seedling text-white/80 text-xl mb-1 block"></i>
+                            <span class="text-xs font-semibold text-white drop-shadow-md">Sucroenergético</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Gasto Mensal -->
+            <div class="mb-10">
+                <label class="block text-sm font-semibold text-gray-900 uppercase tracking-wider mb-1">2. Valor médio mensal gasto com Energia (R$)</label>
+                <p class="text-xs text-gray-500 mb-4">Insira o custo estimado de sua fatura elétrica ou custo de combustível. Este valor servirá de base (100%) para o cálculo das estimativas de perdas.</p>
+                <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                    <div class="text-center mb-6">
+                        <span class="text-4xl font-bold text-apple-blue" id="bill-display">R$ 150.000</span>
+                    </div>
+                    <input type="range" id="bill-slider" min="10000" max="2000000" step="10000" value="150000">
+                    <div class="flex justify-between text-xs text-gray-400 mt-2 font-medium">
+                        <span>R$ 10k</span>
+                        <span>R$ 2M+</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carga Alvo -->
+            <div class="mb-10">
+                <label class="block text-sm font-semibold text-gray-900 uppercase tracking-wider mb-1">3. Selecione as principais Cargas Alvo (Múltipla Escolha)</label>
+                <p class="text-xs text-gray-500 mb-4">Clique nos sistemas que mais impactam sua planta. A combinação revela problemas cruzados no chão de fábrica.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Refrigeração -->
+                    <div class="load-card selectable-card border border-gray-200 rounded-2xl p-5 cursor-pointer bg-white" data-value="refrigeracao">
+                        <div class="flex items-center gap-4 mb-2">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-apple-blue">
+                                <i class="fa-solid fa-snowflake"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-900">Refrigeração</h3>
+                        </div>
+                        <p class="text-xs text-gray-500">Câmaras frias, túneis de congelamento e chillers.</p>
+                    </div>
+                    <!-- Térmico / Vapor -->
+                    <div class="load-card selectable-card border border-gray-200 rounded-2xl p-5 cursor-pointer bg-white" data-value="termico">
+                        <div class="flex items-center gap-4 mb-2">
+                            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-apple-orange">
+                                <i class="fa-solid fa-fire"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-900">Sistemas Térmicos</h3>
+                        </div>
+                        <p class="text-xs text-gray-500">Fornos, caldeiras e distribuição de vapor.</p>
+                    </div>
+                    <!-- Maquinário / Ar Comprimido -->
+                    <div class="load-card selectable-card border border-gray-200 rounded-2xl p-5 cursor-pointer bg-white" data-value="maquinario">
+                        <div class="flex items-center gap-4 mb-2">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700">
+                                <i class="fa-solid fa-industry"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-900">Motores & Ar Comp.</h3>
+                        </div>
+                        <p class="text-xs text-gray-500">Linhas de ar comprimido, motores e processos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão Simular -->
+            <div class="text-center">
+                <button id="simulate-btn" class="bg-apple-dark text-white rounded-full px-8 py-4 font-semibold text-lg hover:bg-black transition-all shadow-apple hover:shadow-apple-hover disabled:opacity-50 disabled:cursor-not-allowed">
+                    Gerar Diagnóstico Dinâmico
+                </button>
+                <p id="error-msg" class="text-red-500 text-sm mt-3 hidden">Selecione o segmento e pelo menos uma carga alvo.</p>
+            </div>
+        </div>
+
+        <div id="results-section" class="hidden">
+            
+            <!-- Resumo Financeiro -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 slide-up">
+                <div class="glass-card rounded-3xl p-8 flex flex-col justify-center relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-apple-green opacity-10 text-9xl"><i class="fa-solid fa-piggy-bank"></i></div>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Potencial de Economia Mensal</h3>
+                    <div class="text-5xl font-bold text-apple-dark tracking-tight mb-2" id="monthly-savings">R$ 0</div>
+                    <p class="text-apple-green font-medium"><i class="fa-solid fa-arrow-trend-down mr-1"></i> Redução estimada de <span id="percent-savings">0</span>%</p>
+                </div>
+
+                <div class="glass-card rounded-3xl p-8 flex flex-col justify-center bg-apple-dark text-white shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-4 -bottom-4 text-white opacity-5 text-9xl"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Economia Acumulada (12 Meses)</h3>
+                    <div class="text-5xl font-bold tracking-tight mb-2" id="yearly-savings">R$ 0</div>
+                    <p class="text-gray-300 font-medium">Impacto direto no Ebitda e competitividade.</p>
+                </div>
+            </div>
+
+            <!-- Gráfico de Evolução (D3.js) -->
+            <div class="glass-card rounded-3xl p-6 md:p-8 mb-12 slide-up delay-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-apple-dark mb-1">Evolução de Consumo Mensal (1 Ano)</h3>
+                        <p class="text-sm text-gray-500">Comparativo do custo com energia: Sem ação vs. Implantação das melhorias.</p>
+                    </div>
+                    <div class="flex gap-4 text-xs font-semibold bg-gray-50 p-2 rounded-lg border border-gray-100">
+                        <div class="flex items-center gap-1.5 text-gray-500"><span class="w-3 h-0.5 bg-red-400 border border-dashed border-red-400 inline-block"></span> Sem Ação</div>
+                        <div class="flex items-center gap-1.5 text-apple-green"><span class="w-3 h-0.5 bg-apple-green inline-block"></span> Com Potencializa</div>
+                    </div>
+                </div>
+                <div id="savings-chart" class="w-full relative" style="min-height: 250px;">
+                    <!-- O Gráfico será injetado aqui -->
+                </div>
+                <div id="chart-tooltip" class="d3-tooltip"></div>
+            </div>
+
+            <!-- Mapa de Oportunidades Detalhado -->
+            <h2 class="text-2xl font-bold text-apple-dark mb-6 slide-up delay-100">Raio-X de Ineficiências e Oportunidades</h2>
+            <div id="opportunities-container" class="grid grid-cols-1 gap-6 mb-12">
+                <!-- Cards injetados via JS -->
+            </div>
+
+            <!-- CTA Potencializa -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl p-10 text-center text-white shadow-2xl slide-up delay-300 relative overflow-hidden">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-bold mb-4">Transforme Perdas em Lucro</h2>
+                    <p class="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
+                        O <strong class="text-white">Programa Potencializa</strong> oferece consultoria especializada com metodologia SENAI. Identificamos, quantificamos e propomos soluções exatas para a sua indústria fazer mais com menos energia.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="bg-white text-apple-blue font-semibold rounded-full px-8 py-3 hover:bg-gray-50 transition shadow-lg">
+                            Falar com um Consultor
+                        </button>
+                        <button id="recalculate-btn" class="border border-white/30 text-white font-medium rounded-full px-8 py-3 hover:bg-white/10 transition">
+                            Nova Simulação
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Dados de referência baseados em relatórios de auditorias reais (Estudos de Caso: Empresa A e Empresa B)
+        const reportsData = {
+            refrigeracao: {
+                title: "Refrigeração & Câmaras Frias",
+                icon: "fa-snowflake",
+                color: "blue",
+                shareMultiplier: { alimentos: 0.5, quimico: 0.4, default: 0.2 }, // % da conta
+                avgLosses: 0.25, // 25% de perdas em média
+                insights: [
+                    {
+                        title: "Vedação e Infiltração Térmica",
+                        desc: "Frestas de 3 a 5mm nas portas causam perda de 15% a 25% por infiltração contínua de ar quente e úmido. Cortinas de ar reduzem perdas em até 80%.",
+                        barWidth: "80%"
+                    },
+                    {
+                        title: "Iluminação Parasita (24/7)",
+                        desc: "Luzes internas ligadas geram consumo elétrico direto e dissipam calor, sobrecarregando os compressores para manter o setpoint.",
+                        barWidth: "40%"
+                    },
+                    {
+                        title: "Ajuste de Setpoint & Pressão",
+                        desc: "O aumento de apenas 1°C na evaporação reduz consumo em 2-3%. Condensação flutuante economiza até 15%.",
+                        barWidth: "60%"
+                    }
+                ],
+                strategicTips: [
+                    { img: "https://images.unsplash.com/photo-1584824388190-547dfb4457e5?auto=format&fit=crop&w=400&q=80", icon: "fa-door-open", title: "Formação de Gelo e Frestas", text: "Frestas de 3 a 5mm nas gaxetas criam vazamentos invisíveis. O ar frio denso escapa e o ar quente gera camadas de gelo, forçando ciclos de degelo no evaporador." },
+                    { img: "https://images.unsplash.com/photo-1518175510659-3d120a8d4624?auto=format&fit=crop&w=400&q=80", icon: "fa-temperature-arrow-down", title: "Troca Térmica Convectiva", text: "Portas abertas por tempo prolongado sem cortinas de PVC polar causam forte troca térmica instantânea, sobrecarregando severamente o maquinário." }
+                ]
+            },
+            termico: {
+                title: "Sistemas Térmicos e Vapor",
+                icon: "fa-fire",
+                color: "orange",
+                shareMultiplier: { sucroenergetico: 0.5, alimentos: 0.3, default: 0.25 },
+                avgLosses: 0.35, // 35% de perdas
+                insights: [
+                    {
+                        title: "Gestão de Purgadores",
+                        desc: "Purgadores travados abertos desperdiçam vapor continuamente, gerando até 10% de perda térmica no sistema.",
+                        barWidth: "70%"
+                    },
+                    {
+                        title: "Recuperação de Calor (Chaminé)",
+                        desc: "Aproveitamento dos gases de exaustão recupera de 10% a 20% do calor para pré-aquecer água ou ar de combustão.",
+                        barWidth: "90%"
+                    },
+                    {
+                        title: "Controle de O2 na Combustão",
+                        desc: "Reduzir o excesso de ar mantendo O2 entre 2% e 3% gera economia direta de 3% a 5% em combustível.",
+                        barWidth: "50%"
+                    }
+                ],
+                strategicTips: [
+                    { img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=400&q=80", icon: "fa-droplet", title: "Purgadores e Tubulações", text: "Um único purgador de caldeira travado na posição aberta na rede atua como um 'furo', jorrando vapor e energia pura diretamente na atmosfera." },
+                    { img: "https://images.unsplash.com/photo-1498084393753-b411b2d26b34?auto=format&fit=crop&w=400&q=80", icon: "fa-arrow-up-from-bracket", title: "Exaustão e Queima", text: "Gases saindo pela chaminé a altas temperaturas representam combustível jogado fora. O calor residual deve ser recuperado para a água da caldeira." }
+                ]
+            },
+            maquinario: {
+                title: "Ar Comprimido & Força Motriz",
+                icon: "fa-industry",
+                color: "gray",
+                shareMultiplier: { metalmecanica: 0.6, vestuario: 0.5, default: 0.3 },
+                avgLosses: 0.30, // 30% de perdas
+                insights: [
+                    {
+                        title: "Vazamentos na Rede de Ar",
+                        desc: "Vazamentos representam de 20% a 40% da demanda máxima. Furos pequenos geram altos custos contínuos.",
+                        barWidth: "85%"
+                    },
+                    {
+                        title: "Superpressurização",
+                        desc: "Operar a 12 bar quando a máquina exige 7 bar causa desperdício extremo. Reduzir 1 bar poupa ~7% no compressor.",
+                        barWidth: "65%"
+                    },
+                    {
+                        title: "Usos Indevidos",
+                        desc: "Substituição de sopro direto de ar comprimido por bicos amplificadores ou sopradores de baixa pressão.",
+                        barWidth: "40%"
+                    }
+                ],
+                strategicTips: [
+                    { img: "https://images.unsplash.com/photo-1611078971842-881514781483?auto=format&fit=crop&w=400&q=80", icon: "fa-wind", title: "Engates e Vazamentos", text: "Furos microscópicos ou engates rápidos frouxos fazem o compressor operar em alívio e carga continuamente. É a utilidade elétrica mais cara da indústria." },
+                    { img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80", icon: "fa-gauge-high", title: "Pressão Excessiva", text: "Operar toda a rede a 12 bar quando a máquina exige apenas 7 bar força os motores elétricos sem necessidade. Reduza a pressão no pressostato geral." }
+                ]
+            }
+        };
+
+        // Estado do App
+        let state = {
+            segment: null,
+            bill: 150000,
+            loads: []
+        };
+
+        // Elementos do DOM
+        const formatCurrency = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
+        const billSlider = document.getElementById('bill-slider');
+        const billDisplay = document.getElementById('bill-display');
+        const segmentBtns = document.querySelectorAll('.segment-btn');
+        const loadCards = document.querySelectorAll('.load-card');
+        const simulateBtn = document.getElementById('simulate-btn');
+        const errorMsg = document.getElementById('error-msg');
+        
+        const setupSection = document.getElementById('setup-section');
+        const resultsSection = document.getElementById('results-section');
+        
+        const monthlySavingsEl = document.getElementById('monthly-savings');
+        const yearlySavingsEl = document.getElementById('yearly-savings');
+        const percentSavingsEl = document.getElementById('percent-savings');
+        const opportunitiesContainer = document.getElementById('opportunities-container');
+        const recalculateBtn = document.getElementById('recalculate-btn');
+
+        billSlider.addEventListener('input', (e) => {
+            state.bill = parseInt(e.target.value);
+            billDisplay.textContent = formatCurrency(state.bill);
+        });
+
+        segmentBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                segmentBtns.forEach(b => {
+                    b.classList.remove('selected');
+                });
+                btn.classList.add('selected');
+                state.segment = btn.dataset.value;
+            });
+        });
+
+        loadCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const val = card.dataset.value;
+                if(state.loads.includes(val)) {
+                    state.loads = state.loads.filter(l => l !== val);
+                    card.classList.remove('selected');
+                } else {
+                    state.loads.push(val);
+                    card.classList.add('selected');
+                }
+            });
+        });
+
+        simulateBtn.addEventListener('click', () => {
+            if(!state.segment || state.loads.length === 0) {
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            errorMsg.classList.add('hidden');
+            
+            calculateAndRender();
+            
+            // Transição UI
+            setupSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        recalculateBtn.addEventListener('click', () => {
+            resultsSection.classList.add('hidden');
+            setupSection.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        function calculateAndRender() {
+            let totalEstimatedSavings = 0;
+            opportunitiesContainer.innerHTML = ''; // Limpa cards anteriores
+
+            let delayCounter = 1;
+
+            state.loads.forEach(loadKey => {
+                const data = reportsData[loadKey];
+                
+                // Determina o peso da carga baseado no segmento (ex: Frigorifico gasta mais refrigeração)
+                const share = data.shareMultiplier[state.segment] || data.shareMultiplier.default;
+                
+                // Custo estimado desta carga na fatura
+                const loadCost = state.bill * share;
+                
+                // Economia mensal nesta carga (Custo da carga * Percentual médio de perda)
+                const loadSavings = loadCost * data.avgLosses;
+                totalEstimatedSavings += loadSavings;
+
+                // Cores dinâmicas Tailwind
+                const colorMap = {
+                    blue: { text: 'text-apple-blue', bg: 'bg-apple-blue', light: 'bg-blue-50' },
+                    orange: { text: 'text-apple-orange', bg: 'bg-apple-orange', light: 'bg-orange-50' },
+                    gray: { text: 'text-gray-700', bg: 'bg-gray-700', light: 'bg-gray-100' }
+                };
+                const c = colorMap[data.color];
+
+                // Renderiza Card de Oportunidade
+                let insightsHtml = data.insights.map(insight => `
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="font-semibold text-gray-800">${insight.title}</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-2">${insight.desc}</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="${c.bg} h-2 rounded-full progress-bar-fill" style="width: 0%" data-target="${insight.barWidth}"></div>
+                        </div>
+                    </div>
+                `).join('');
+
+                let strategicTipsHtml = data.strategicTips.map(tip => `
+                    <div class="bg-white border border-gray-100 rounded-xl shadow-sm flex flex-col gap-0 hover:shadow-md transition-all cursor-default group overflow-hidden h-full">
+                        <div class="h-28 w-full bg-gray-200 relative overflow-hidden">
+                            <img src="${tip.img}" alt="Evidência" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                            <div class="absolute bottom-3 left-3 right-3 flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-sm shrink-0 border border-white/30">
+                                    <i class="fa-solid ${tip.icon}"></i>
+                                </div>
+                                <h5 class="text-sm font-bold text-white leading-tight drop-shadow-md">${tip.title}</h5>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-white flex-1">
+                            <p class="text-xs text-gray-600 leading-relaxed">${tip.text}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                const cardHtml = `
+                    <div class="glass-card rounded-2xl p-6 md:p-8 slide-up delay-${delayCounter}00 flex flex-col md:flex-row gap-8 items-start border-l-4 border-l-${c.bg.replace('bg-', '')}">
+                        <div class="w-full md:w-1/3 text-center md:text-left md:sticky md:top-24">
+                            <div class="w-16 h-16 ${c.light} rounded-2xl flex items-center justify-center ${c.text} text-2xl mb-4 mx-auto md:mx-0 shadow-sm">
+                                <i class="fa-solid ${data.icon}"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">${data.title}</h3>
+                            <div class="text-xs text-gray-500 mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100 flex gap-2 text-left">
+                                <i class="fa-solid fa-circle-info text-blue-400 mt-0.5"></i>
+                                <span>Estes valores são <b>estimativas teóricas aproximadas</b> calculadas por matrizes de ponderação do setor.</span>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4 inline-block w-full border border-gray-100 shadow-inner">
+                                <span class="block text-xs font-semibold text-gray-400 uppercase">Potencial Recuperável (Est.)</span>
+                                <span class="block text-2xl md:text-3xl font-bold ${c.text} mt-1">${formatCurrency(loadSavings)}<span class="text-sm font-medium text-gray-400">/mês</span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full md:w-2/3 flex flex-col gap-6">
+                            <!-- Barras de Ineficiência -->
+                            <div>
+                                <h4 class="text-sm font-semibold uppercase tracking-wider text-gray-900 mb-4 border-b border-gray-100 pb-2">Onde os desperdícios ocorrem?</h4>
+                                ${insightsHtml}
+                            </div>
+                            
+                            <!-- Dicas Estratégicas Interativas -->
+                            <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-100">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-camera text-gray-500 text-lg"></i>
+                                    Evidências em Campo e Sintomas Técnicos
+                                </h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+                                    ${strategicTipsHtml}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                opportunitiesContainer.innerHTML += cardHtml;
+                delayCounter++;
+            });
+
+            // Atualiza Top Dashboard (Animação de números)
+            const percentTotal = (totalEstimatedSavings / state.bill) * 100;
+            animateValue(monthlySavingsEl, 0, totalEstimatedSavings, 1500, formatCurrency);
+            animateValue(yearlySavingsEl, 0, totalEstimatedSavings * 12, 1500, formatCurrency);
+            animateValue(percentSavingsEl, 0, percentTotal, 1500, (v) => v.toFixed(1));
+
+            // Renderiza gráfico do D3.js após transição
+            setTimeout(() => {
+                renderD3Chart(totalEstimatedSavings);
+            }, 300);
+
+            // Dispara animação das barras de progresso após um leve delay
+            setTimeout(() => {
+                document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+                    bar.style.width = bar.getAttribute('data-target');
+                });
+            }, 500);
+        }
+
+        // Função de Animação de Números
+        function animateValue(obj, start, end, duration, formatFn) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // Função de easing out cubic
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                const currentVal = start + easeProgress * (end - start);
+                
+                obj.innerHTML = formatFn(currentVal);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Renderização do Gráfico com D3.js
+        function renderD3Chart(monthlySavings) {
+            const container = d3.select("#savings-chart");
+            container.selectAll("*").remove(); // Limpa gráfico anterior
+
+            // Gera dados comparativos (Simulando uma curva de implantação de 3 meses para atingir a economia máxima)
+            const baselineValue = state.bill;
+            
+            const chartData = Array.from({length: 12}, (_, i) => {
+                let currentSavings = 0;
+                // Curva de ramp-up da economia (0 a 100% em 3 meses)
+                if (i === 0) currentSavings = monthlySavings * 0.3; // Mês 1: 30% da economia
+                else if (i === 1) currentSavings = monthlySavings * 0.7; // Mês 2: 70% da economia
+                else currentSavings = monthlySavings; // Mês 3 em diante: 100% da economia
+
+                return {
+                    month: i + 1,
+                    label: `M${i + 1}`, // Label curto para caber em telas mobile
+                    baseline: baselineValue,
+                    impacted: baselineValue - currentSavings,
+                    savings: currentSavings
+                };
+            });
+
+            // Configurações e dimensões do SVG (Responsivo com viewBox)
+            const width = 800;
+            const height = 300;
+            const margin = {top: 20, right: 20, bottom: 40, left: 70};
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            const svg = container.append("svg")
+                .attr("viewBox", `0 0 ${width} ${height}`)
+                .attr("preserveAspectRatio", "xMidYMid meet")
+                .attr("class", "w-full h-full drop-shadow-sm");
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Definição do Gradiente da Área de Economia (Abaixo da linha impactada)
+            const defs = svg.append("defs");
+            const gradient = defs.append("linearGradient")
+                .attr("id", "area-gradient")
+                .attr("x1", "0%").attr("y1", "0%")
+                .attr("x2", "0%").attr("y2", "100%");
+            gradient.append("stop")
+                .attr("offset", "0%")
+                .attr("stop-color", "#34c759").attr("stop-opacity", 0.3);
+            gradient.append("stop")
+                .attr("offset", "100%")
+                .attr("stop-color", "#34c759").attr("stop-opacity", 0.0);
+
+            // Escalas
+            const x = d3.scalePoint()
+                .domain(chartData.map(d => d.label))
+                .range([0, innerWidth])
+                .padding(0.1);
+
+            // Escala Y começando de 0 até 15% acima do valor base para dar respiro
+            const y = d3.scaleLinear()
+                .domain([0, baselineValue * 1.15]) 
+                .range([innerHeight, 0]);
+
+            // Eixos
+            const xAxis = d3.axisBottom(x)
+                .tickSize(-5)
+                .tickPadding(10);
+                
+            const yAxis = d3.axisLeft(y)
+                .ticks(5)
+                .tickSize(-innerWidth)
+                .tickFormat(d => new Intl.NumberFormat('pt-BR', { notation: "compact", compactDisplay: "short", style: "currency", currency: "BRL" }).format(d));
+
+            // Adiciona Eixo X
+            g.append("g")
+                .attr("transform", `translate(0,${innerHeight})`)
+                .call(xAxis)
+                .attr("color", "#a1a1aa") 
+                .attr("font-family", "Inter")
+                .attr("font-size", "12px")
+                .call(g => g.select(".domain").remove())
+                .selectAll("line").attr("stroke", "#f4f4f5");
+
+            // Adiciona Eixo Y
+            g.append("g")
+                .call(yAxis)
+                .attr("color", "#a1a1aa")
+                .attr("font-family", "Inter")
+                .attr("font-size", "12px")
+                .call(g => g.select(".domain").remove())
+                .selectAll("line").attr("stroke", "#f4f4f5").attr("stroke-dasharray", "4,4");
+
+            // Geradores de Linha e Área
+            const lineBaseline = d3.line()
+                .x(d => x(d.label))
+                .y(d => y(d.baseline));
+
+            const lineImpacted = d3.line()
+                .x(d => x(d.label))
+                .y(d => y(d.impacted))
+                .curve(d3.curveMonotoneX); // Curva suave na queda
+
+            const area = d3.area()
+                .x(d => x(d.label))
+                .y0(innerHeight)
+                .y1(d => y(d.impacted))
+                .curve(d3.curveMonotoneX);
+
+            // Adiciona Área com Gradiente (Consumo Real após implantação)
+            g.append("path")
+                .datum(chartData)
+                .attr("fill", "url(#area-gradient)")
+                .attr("d", area)
+                .attr("opacity", 0)
+                .transition()
+                .duration(1500)
+                .attr("opacity", 1);
+
+            // Adiciona Linha Base (Sem Ação - Tracejada)
+            g.append("path")
+                .datum(chartData)
+                .attr("fill", "none")
+                .attr("stroke", "#ff8a80") // Vermelho claro
+                .attr("stroke-width", 2)
+                .attr("stroke-dasharray", "6,4")
+                .attr("d", lineBaseline);
+
+            // Adiciona Linha Impactada (Animada)
+            const pathImpacted = g.append("path")
+                .datum(chartData)
+                .attr("fill", "none")
+                .attr("stroke", "#34c759") // Verde Apple
+                .attr("stroke-width", 3)
+                .attr("d", lineImpacted);
+
+            const totalLength = pathImpacted.node().getTotalLength();
+
+            pathImpacted.attr("stroke-dasharray", totalLength + " " + totalLength)
+                .attr("stroke-dashoffset", totalLength)
+                .transition()
+                .duration(1500)
+                .ease(d3.easeCubicOut)
+                .attr("stroke-dashoffset", 0);
+
+            // Tooltip e Interatividade (Pontos no Gráfico)
+            const tooltip = d3.select("#chart-tooltip");
+
+            // Pontos da Linha Impactada
+            g.selectAll(".dot")
+                .data(chartData)
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => x(d.label))
+                .attr("cy", d => y(d.impacted))
+                .attr("r", 5)
+                .attr("fill", "#ffffff")
+                .attr("stroke", "#34c759")
+                .attr("stroke-width", 2)
+                .attr("opacity", 0)
+                .on("mouseover", function(event, d) {
+                    d3.select(this).attr("r", 8).attr("fill", "#34c759");
+                    tooltip.transition().duration(200).style("opacity", 1);
+                    
+                    // Conteúdo detalhado do tooltip
+                    tooltip.html(`
+                        <div class="font-bold text-gray-200 mb-2 border-b border-gray-600 pb-1">Mês ${d.month}</div>
+                        <div class="flex justify-between items-center text-red-300 mb-1 gap-4">
+                            <span>Média Atual:</span> 
+                            <span>${formatCurrency(d.baseline)}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-green-400 mb-2 gap-4">
+                            <span>Com Otimização:</span> 
+                            <span class="font-bold">${formatCurrency(d.impacted)}</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-white/10 p-1.5 rounded text-white gap-4">
+                            <span>Economia:</span> 
+                            <span class="font-bold">${formatCurrency(d.savings)}</span>
+                        </div>
+                    `);
+
+                    // Lógica para manter o tooltip dentro da tela (Responsividade Mobile)
+                    let xPosition = event.pageX - 100;
+                    if (xPosition < 10) xPosition = 10; // Não deixa sumir na esquerda
+                    if (xPosition + 220 > window.innerWidth) xPosition = window.innerWidth - 230; // Não deixa sumir na direita
+
+                    tooltip
+                        .style("left", xPosition + "px")
+                        .style("top", (event.pageY - 110) + "px");
+                })
+                .on("mouseout", function() {
+                    d3.select(this).attr("r", 5).attr("fill", "#ffffff");
+                    tooltip.transition().duration(500).style("opacity", 0);
+                })
+                .transition()
+                .delay((d, i) => i * 125)
+                .duration(500)
+                .attr("opacity", 1);
+        }
+    </script>
+</body>
+</html>
