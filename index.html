@@ -205,7 +205,7 @@
                 <p class="text-xs text-gray-500 mb-4">Diferentes indústrias possuem matrizes energéticas distintas (Ex: frigoríficos concentram o peso na refrigeração, usinas no vapor).</p>
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
                     <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="alimentos">
-                        <img src="https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?auto=format&fit=crop&w=400&q=80" alt="Alimentos" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <img src="https://i.postimg.cc/BZR3ggzK/Alimentos.avif" alt="Alimentos" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <div class="relative z-20 p-3 w-full text-center">
                             <i class="fa-solid fa-utensils text-white/80 text-xl mb-1 block"></i>
@@ -213,7 +213,7 @@
                         </div>
                     </button>
                     <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="metalmecanica">
-                        <img src="https://images.unsplash.com/photo-1565514020179-026b92b84bb6?auto=format&fit=crop&w=400&q=80" alt="Metalmecânica" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <img src="https://i.postimg.cc/c4YS53yK/Metalmecanica.jpg" alt="Metalmecânica" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <div class="relative z-20 p-3 w-full text-center">
                             <i class="fa-solid fa-gears text-white/80 text-xl mb-1 block"></i>
@@ -221,7 +221,7 @@
                         </div>
                     </button>
                     <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="vestuario">
-                        <img src="https://images.unsplash.com/photo-1558024920-b41e1887dc32?auto=format&fit=crop&w=400&q=80" alt="Vestuário" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <img src="https://i.postimg.cc/9fXHMN4X/Vestuario.webp" alt="Vestuário" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <div class="relative z-20 p-3 w-full text-center">
                             <i class="fa-solid fa-shirt text-white/80 text-xl mb-1 block"></i>
@@ -229,7 +229,7 @@
                         </div>
                     </button>
                     <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="quimico">
-                        <img src="https://images.unsplash.com/photo-1532187863486-abf9db090b82?auto=format&fit=crop&w=400&q=80" alt="Químico" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <img src="https://i.postimg.cc/fRNN4bD8/Farmaceutica.jpg" alt="Químico" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <div class="relative z-20 p-3 w-full text-center">
                             <i class="fa-solid fa-flask text-white/80 text-xl mb-1 block"></i>
@@ -237,7 +237,7 @@
                         </div>
                     </button>
                     <button class="segment-btn relative overflow-hidden border-2 border-transparent rounded-2xl text-center hover:shadow-md transition bg-black h-28 flex flex-col justify-end" data-value="sucroenergetico">
-                        <img src="https://images.unsplash.com/photo-1625244724120-1fd1d6722241?auto=format&fit=crop&w=400&q=80" alt="Sucroenergético" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
+                        <img src="https://i.postimg.cc/wTJpbN8Y/Sucroenergetico.webp" alt="Sucroenergético" class="segment-btn-img absolute inset-0 w-full h-full object-cover z-0">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                         <div class="relative z-20 p-3 w-full text-center">
                             <i class="fa-solid fa-seedling text-white/80 text-xl mb-1 block"></i>
@@ -328,9 +328,27 @@
                     <div class="absolute -right-4 -bottom-4 text-apple-green opacity-10 text-9xl"><i class="fa-solid fa-piggy-bank"></i></div>
                     <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Economia Anual Aproximada</h3>
                     <div class="text-5xl font-bold tracking-tight mb-2 text-gray-900" id="yearly-savings-avg">R$ 0</div>
-                    <p class="text-apple-green font-medium flex items-center gap-2">
-                        <i class="fa-solid fa-arrow-trend-down"></i> Valor estimado na carga alvo (1 Ano)
+                    <p class="text-apple-green font-medium flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-arrow-trend-down"></i> Estimativa de economia anual na carga alvo
                     </p>
+                    
+                    <!-- Divisão detalhada de onde vem a economia -->
+                    <div id="savings-breakdown" class="mt-4 flex flex-col gap-2 relative z-10">
+                        <!-- Valores injetados via JS -->
+                    </div>
+
+                    <!-- Alerta de Payback (Oculto por padrão, aparece apenas se marcar Motores) -->
+                    <div id="capex-warning" class="mt-4 bg-yellow-50 border border-yellow-200 p-3 rounded-xl hidden relative z-10">
+                        <div class="flex gap-3 items-start">
+                            <i class="fa-solid fa-triangle-exclamation text-yellow-600 text-lg mt-0.5"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-yellow-800">Atenção ao Payback (Motores)</h4>
+                                <p class="text-xs text-yellow-700 mt-1 leading-relaxed">
+                                    A economia gerada por <strong>Força Motriz</strong> exige investimento em novos equipamentos. O lucro desta rubrica inicia após o período de retorno (Payback).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -514,6 +532,9 @@
             let totalMinGlobalPct = 0;
             let totalMaxGlobalPct = 0;
             let totalTargetLoadShare = 0;
+            
+            let breakdownHtml = ''; // NOVO: Acumulador de HTML para a divisão
+
             const opportunitiesContainer = document.getElementById('opportunities-container');
             opportunitiesContainer.innerHTML = ''; 
 
@@ -531,7 +552,6 @@
             state.loads.forEach(loadKey => {
                 const loadGroup = reportsData[loadKey];
                 
-                // Puxa os dados exatos do PDF correspondente
                 const specificData = loadGroup.segments[state.segment] || loadGroup.segments.default;
                 const visual = loadGroup.visual || { icon: loadGroup.icon, color: loadGroup.color };
                 
@@ -548,8 +568,18 @@
                 // A economia é tirada APENAS da fatia da máquina
                 const minSavingsLoadR$ = loadCostR$ * minLossPct;
                 const maxSavingsLoadR$ = loadCostR$ * maxLossPct;
+                
+                // NOVO: Cálculo médio anual por carga
+                const avgSavingsYearlyLoad = ((minSavingsLoadR$ + maxSavingsLoadR$) / 2) * 12;
+                
+                // NOVO: Adiciona a linha na composição
+                breakdownHtml += `
+                    <div class="flex justify-between items-center text-xs pb-1 border-b border-gray-200/50 last:border-0 last:pb-0">
+                        <span class="text-gray-600 flex items-center gap-1"><i class="fa-solid ${visual.icon} text-[10px] w-3 text-center"></i> ${loadGroup.title}</span>
+                        <strong class="text-gray-900">${formatCurrency(avgSavingsYearlyLoad)}</strong>
+                    </div>
+                `;
 
-                // Contribuição para a variável global do dashboard
                 totalMinGlobalPct += (share * minLossPct);
                 totalMaxGlobalPct += (share * maxLossPct);
 
@@ -630,6 +660,17 @@
 
             const avgSavingsYearly = ((minSavingsMonthly + maxSavingsMonthly) / 2) * 12;
             if (yearlySavingsAvgEl) animateValue(yearlySavingsAvgEl, 0, avgSavingsYearly, 1500, (v) => formatCurrency(v));
+            
+            // NOVO: Injeta o breakdown na tela
+            document.getElementById('savings-breakdown').innerHTML = breakdownHtml;
+
+            // NOVO: Controle de exibição do alerta de Payback para Motores
+            const capexWarning = document.getElementById('capex-warning');
+            if (state.loads.includes('motores')) {
+                capexWarning.classList.remove('hidden');
+            } else {
+                capexWarning.classList.add('hidden');
+            }
             
             // Grau de Oportunidade Global
             let oppLevel = "Baixo";
