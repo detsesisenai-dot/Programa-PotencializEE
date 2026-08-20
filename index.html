@@ -326,7 +326,7 @@
                          <div class="text-4xl md:text-5xl font-bold text-apple-dark tracking-tight"><span id="yearly-savings-max">0</span></div>
                     </div>
                    
-                    <p class="text-apple-green font-medium mt-1"><i class="fa-solid fa-arrow-trend-down mr-1"></i> Estimativa de capital retido no caixa (1 Ano)</p>
+                    <p class="text-apple-green font-medium mt-1"><i class="fa-solid fa-arrow-trend-down mr-1"></i> <comment-tag id="1">Estimativa de capital retido no caixa (1 Ano)</comment-tag id="1" text="Estimativa de economia anual na carga alvo" type="suggestion"></p>
                 </div>
 
                 <div class="glass-card rounded-3xl p-8 flex flex-col justify-center bg-apple-dark text-white shadow-xl relative overflow-hidden">
@@ -350,8 +350,9 @@
                         <h3 class="text-xl font-bold text-apple-dark mb-1">Evolução de Consumo Mensal (1 Ano)</h3>
                         <p class="text-sm text-gray-500">Comparativo financeiro: O custo da energia vs. O ganho da eficiência.</p>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-4 text-xs font-semibold bg-gray-50 p-2 rounded-lg border border-gray-100 mt-4 md:mt-0">
+                    <div class="flex flex-wrap sm:flex-row gap-4 text-xs font-semibold bg-gray-50 p-2 rounded-lg border border-gray-100 mt-4 md:mt-0">
                         <div class="flex items-center gap-2 text-gray-600"><span class="w-3 h-3 rounded-sm bg-[#0066cc] inline-block shadow-sm"></span> Média de Consumo Mensal</div>
+                        <div class="flex items-center gap-2 text-red-500"><span class="w-3 h-3 rounded-sm bg-[#ef4444] inline-block shadow-sm"></span> Média de Consumo Carga Alvo</div>
                         <div class="flex items-center gap-2 text-apple-green"><span class="w-3 h-3 rounded-sm bg-[#34c759] inline-block shadow-sm"></span> Economia Média Carga Alvo Mensal</div>
                     </div>
                 </div>
@@ -387,90 +388,62 @@
     </main>
 
     <script>
-        // Dados de referência baseados em relatórios de auditorias reais (Estudos de Caso: Empresa A e Empresa B)
+        // Cérebro de Dados (Cruzamento rigoroso com os 5 PDFs em Anexo - Agosto/2026)
         const reportsData = {
             refrigeracao: {
-                title: "Refrigeração & Câmaras Frias",
+                title: "Refrigeração & Climatização",
                 icon: "fa-snowflake",
                 color: "blue",
-                shareMultiplier: { alimentos: 0.5, quimico: 0.4, default: 0.2 }, // % da conta
-                avgLosses: 0.25, // 25% de perdas em média
+                segments: {
+                    alimentos: { share: 0.50, minLoss: 0.15, maxLoss: 0.30, insightTitle: "Infiltração e Compressores", insightDesc: "Estudo Alimentício: Perdas por infiltração de ar, incrustação de trocadores e degelo incorreto em frigoríficos/laticínios." },
+                    quimico: { share: 0.30, minLoss: 0.20, maxLoss: 0.35, insightTitle: "Chillers & Fluido Térmico", insightDesc: "Estudo Farmoquímico: Chillers antigos com baixo COP e operação fora do ponto ótimo em reações exotérmicas." },
+                    default: { share: 0.20, minLoss: 0.15, maxLoss: 0.25, insightTitle: "Ajuste de Setpoint", insightDesc: "Estudos Gerais: O aumento de apenas 1°C na evaporação reduz consumo em 2-3%." }
+                },
                 insights: [
-                    {
-                        title: "Vedação e Infiltração Térmica",
-                        desc: "Frestas de 3 a 5mm nas portas causam perda de 15% a 25% por infiltração contínua de ar quente e úmido. Cortinas de ar reduzem perdas em até 80%.",
-                        barWidth: "80%"
-                    },
-                    {
-                        title: "Iluminação Parasita (24/7)",
-                        desc: "Luzes internas ligadas geram consumo elétrico direto e dissipam calor, sobrecarregando os compressores para manter o setpoint.",
-                        barWidth: "40%"
-                    },
-                    {
-                        title: "Ajuste de Setpoint & Pressão",
-                        desc: "O aumento de apenas 1°C na evaporação reduz consumo em 2-3%. Condensação flutuante economiza até 15%.",
-                        barWidth: "60%"
-                    }
+                    { title: "Vedação e Infiltração Térmica", desc: "Frestas nas portas causam perda de 15% a 25% por infiltração de ar quente.", barWidth: "80%" },
+                    { title: "Ajuste de Setpoint & Pressão", desc: "Aumento de 1°C na evaporação reduz consumo em 2-3%.", barWidth: "60%" }
                 ],
                 strategicTips: [
-                    { img: "https://images.unsplash.com/photo-1584824388190-547dfb4457e5?auto=format&fit=crop&w=400&q=80", icon: "fa-door-open", title: "Formação de Gelo e Frestas", text: "Frestas de 3 a 5mm nas gaxetas criam vazamentos invisíveis. O ar frio denso escapa e o ar quente gera camadas de gelo, forçando ciclos de degelo no evaporador." },
-                    { img: "https://images.unsplash.com/photo-1518175510659-3d120a8d4624?auto=format&fit=crop&w=400&q=80", icon: "fa-temperature-arrow-down", title: "Troca Térmica Convectiva", text: "Portas abertas por tempo prolongado sem cortinas de PVC polar causam forte troca térmica instantânea, sobrecarregando severamente o maquinário." }
+                    { img: "https://images.unsplash.com/photo-1584824388190-547dfb4457e5?auto=format&fit=crop&w=400&q=80", icon: "fa-door-open", title: "Formação de Gelo e Frestas", text: "Frestas de 3 a 5mm nas gaxetas criam vazamentos invisíveis e forçam os compressores." },
+                    { img: "https://images.unsplash.com/photo-1518175510659-3d120a8d4624?auto=format&fit=crop&w=400&q=80", icon: "fa-temperature-arrow-down", title: "Troca Térmica Convectiva", text: "Portas abertas sem cortinas de ar sobrecarregam instantaneamente o maquinário." }
                 ]
             },
             termico: {
-                title: "Sistemas Térmicos e Vapor",
+                title: "Sistemas Térmicos & Vapor",
                 icon: "fa-fire",
                 color: "orange",
-                shareMultiplier: { sucroenergetico: 0.5, alimentos: 0.3, default: 0.25 },
-                avgLosses: 0.35, // 35% de perdas
+                segments: {
+                    sucroenergetico: { share: 0.45, minLoss: 0.15, maxLoss: 0.25, insightTitle: "Evaporação e Cozimento", insightDesc: "Estudo Sucroenergético: Incrustação nas tubulações de caldo e falta de evaporadores Falling Film." },
+                    vestuario: { share: 0.45, minLoss: 0.20, maxLoss: 0.40, insightTitle: "Passadoria Industrial", insightDesc: "Estudo Vestuário: Linhas de vapor sem isolamento, purgas em excesso e perda de condensado em ferros e prensas." },
+                    metalmecanica: { share: 0.45, minLoss: 0.15, maxLoss: 0.30, insightTitle: "Fornos e Tratamento Térmico", insightDesc: "Estudo Metalmecânico: Perdas refratárias, vazamento de calor em portas e falta de isolamento." },
+                    default: { share: 0.25, minLoss: 0.15, maxLoss: 0.30, insightTitle: "Gestão de Purgadores", insightDesc: "Estudos Gerais: Purgadores travados abertos desperdiçam vapor continuamente." }
+                },
                 insights: [
-                    {
-                        title: "Gestão de Purgadores",
-                        desc: "Purgadores travados abertos desperdiçam vapor continuamente, gerando até 10% de perda térmica no sistema.",
-                        barWidth: "70%"
-                    },
-                    {
-                        title: "Recuperação de Calor (Chaminé)",
-                        desc: "Aproveitamento dos gases de exaustão recupera de 10% a 20% do calor para pré-aquecer água ou ar de combustão.",
-                        barWidth: "90%"
-                    },
-                    {
-                        title: "Controle de O2 na Combustão",
-                        desc: "Reduzir o excesso de ar mantendo O2 entre 2% e 3% gera economia direta de 3% a 5% em combustível.",
-                        barWidth: "50%"
-                    }
+                    { title: "Gestão de Purgadores", desc: "Purgadores abertos geram até 10% de perda térmica no sistema.", barWidth: "70%" },
+                    { title: "Recuperação de Calor", desc: "Gases de exaustão recuperam de 10% a 20% do calor.", barWidth: "90%" }
                 ],
                 strategicTips: [
-                    { img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=400&q=80", icon: "fa-droplet", title: "Purgadores e Tubulações", text: "Um único purgador de caldeira travado na posição aberta na rede atua como um 'furo', jorrando vapor e energia pura diretamente na atmosfera." },
-                    { img: "https://images.unsplash.com/photo-1498084393753-b411b2d26b34?auto=format&fit=crop&w=400&q=80", icon: "fa-arrow-up-from-bracket", title: "Exaustão e Queima", text: "Gases saindo pela chaminé a altas temperaturas representam combustível jogado fora. O calor residual deve ser recuperado para a água da caldeira." }
+                    { img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=400&q=80", icon: "fa-droplet", title: "Purgadores e Tubulações", text: "Um purgador travado atua como um 'furo', jorrando energia pura na atmosfera." },
+                    { img: "https://images.unsplash.com/photo-1498084393753-b411b2d26b34?auto=format&fit=crop&w=400&q=80", icon: "fa-arrow-up-from-bracket", title: "Exaustão e Queima", text: "Calor residual saindo pela chaminé deve ser recuperado para a água da caldeira." }
                 ]
             },
             maquinario: {
-                title: "Ar Comprimido & Força Motriz",
+                title: "Força Motriz & Ar Comprimido",
                 icon: "fa-industry",
                 color: "gray",
-                shareMultiplier: { metalmecanica: 0.6, vestuario: 0.5, default: 0.3 },
-                avgLosses: 0.30, // 30% de perdas
+                segments: {
+                    metalmecanica: { share: 0.35, minLoss: 0.25, maxLoss: 0.45, insightTitle: "Usinagem e Ar Comprimido", insightDesc: "Estudo Metalmecânico: Máquinas em vazio (standby) e vazamentos massivos nas linhas de fixação pneumática." },
+                    vestuario: { share: 0.35, minLoss: 0.20, maxLoss: 0.35, insightTitle: "Costura e Corte", insightDesc: "Estudo Vestuário: Motores de embreagem convencionais rodando sem parar. Substituição por Direct Drive recomendada." },
+                    sucroenergetico: { share: 0.25, minLoss: 0.30, maxLoss: 0.50, insightTitle: "Acionamentos da Moenda", insightDesc: "Estudo Sucroenergético: Uso de turbinas a vapor de contrapressão ineficientes nos ternos (rendimento <50%)." },
+                    default: { share: 0.30, minLoss: 0.20, maxLoss: 0.40, insightTitle: "Vazamentos na Rede", insightDesc: "Estudos Gerais: Vazamentos representam de 20% a 40% da demanda de ar comprimido." }
+                },
                 insights: [
-                    {
-                        title: "Vazamentos na Rede de Ar",
-                        desc: "Vazamentos representam de 20% a 40% da demanda máxima. Furos pequenos geram altos custos contínuos.",
-                        barWidth: "85%"
-                    },
-                    {
-                        title: "Superpressurização",
-                        desc: "Operar a 12 bar quando a máquina exige 7 bar causa desperdício extremo. Reduzir 1 bar poupa ~7% no compressor.",
-                        barWidth: "65%"
-                    },
-                    {
-                        title: "Usos Indevidos",
-                        desc: "Substituição de sopro direto de ar comprimido por bicos amplificadores ou sopradores de baixa pressão.",
-                        barWidth: "40%"
-                    }
+                    { title: "Vazamentos na Rede de Ar", desc: "Furos pequenos geram altos custos contínuos (20% a 40% da demanda).", barWidth: "85%" },
+                    { title: "Motores em Vazio", desc: "Máquinas operando em standby consomem energia sem agregar valor.", barWidth: "65%" }
                 ],
                 strategicTips: [
-                    { img: "https://images.unsplash.com/photo-1611078971842-881514781483?auto=format&fit=crop&w=400&q=80", icon: "fa-wind", title: "Engates e Vazamentos", text: "Furos microscópicos ou engates rápidos frouxos fazem o compressor operar em alívio e carga continuamente. É a utilidade elétrica mais cara da indústria." },
-                    { img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80", icon: "fa-gauge-high", title: "Pressão Excessiva", text: "Operar toda a rede a 12 bar quando a máquina exige apenas 7 bar força os motores elétricos sem necessidade. Reduza a pressão no pressostato geral." }
+                    { img: "https://images.unsplash.com/photo-1611078971842-881514781483?auto=format&fit=crop&w=400&q=80", icon: "fa-wind", title: "Engates e Vazamentos", text: "Furos microscópicos fazem o compressor operar em alívio e carga continuamente." },
+                    { img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80", icon: "fa-gauge-high", title: "Pressão Excessiva", text: "Operar toda a rede com pressão extra quando as máquinas exigem menos força desgasta os motores." }
                 ]
             }
         };
@@ -493,11 +466,6 @@
         
         const setupSection = document.getElementById('setup-section');
         const resultsSection = document.getElementById('results-section');
-        
-        const monthlySavingsMinEl = document.getElementById('monthly-savings-min');
-        const monthlySavingsMaxEl = document.getElementById('monthly-savings-max');
-        const opportunityLevelEl = document.getElementById('opportunity-level');
-        const opportunitiesContainer = document.getElementById('opportunities-container');
         const recalculateBtn = document.getElementById('recalculate-btn');
 
         billSlider.addEventListener('input', (e) => {
@@ -507,9 +475,7 @@
 
         segmentBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                segmentBtns.forEach(b => {
-                    b.classList.remove('selected');
-                });
+                segmentBtns.forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 state.segment = btn.dataset.value;
             });
@@ -534,10 +500,7 @@
                 return;
             }
             errorMsg.classList.add('hidden');
-            
             calculateAndRender();
-            
-            // Transição UI
             setupSection.classList.add('hidden');
             resultsSection.classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -552,6 +515,8 @@
         function calculateAndRender() {
             let totalMinGlobalPct = 0;
             let totalMaxGlobalPct = 0;
+            let totalTargetLoadShare = 0;
+            const opportunitiesContainer = document.getElementById('opportunities-container');
             opportunitiesContainer.innerHTML = ''; 
 
             let delayCounter = 1;
@@ -568,26 +533,28 @@
             state.loads.forEach(loadKey => {
                 const loadGroup = reportsData[loadKey];
                 
-                // Trava de segurança: Se o segmento específico não estiver mapeado para esta carga, usa o cenário default/geral.
-                const data = loadGroup.segments && loadGroup.segments[state.segment] ? loadGroup.segments[state.segment] : loadGroup;
+                // Puxa os dados exatos do PDF correspondente
+                const specificData = loadGroup.segments[state.segment] || loadGroup.segments.default;
                 const visual = loadGroup.visual || { icon: loadGroup.icon, color: loadGroup.color };
                 
-                // Determina o peso da carga baseado no segmento selecionado
-                const share = data.shareMultiplier && data.shareMultiplier[state.segment] ? data.shareMultiplier[state.segment] : (data.shareMultiplier ? data.shareMultiplier.default : 0.2);
+                const share = specificData.share;
                 const sharePct = (share * 100).toFixed(0);
+                totalTargetLoadShare += share;
                 
-                // Ranges da carga específica em percentual decimal
-                const minPct = Math.round((data.avgLosses - 0.05) * 100);
-                const maxPct = Math.round((data.avgLosses + 0.05) * 100);
-
-                // Contribuição para a redução global da fatura
-                const globalMin = share * (data.avgLosses - 0.05);
-                const globalMax = share * (data.avgLosses + 0.05);
+                // O valor da fatura que corresponde APENAS a esta carga
+                const loadCostR$ = state.bill * share;
                 
-                totalMinGlobalPct += globalMin * 100;
-                totalMaxGlobalPct += globalMax * 100;
+                const minLossPct = specificData.minLoss;
+                const maxLossPct = specificData.maxLoss;
 
-                // Cores dinâmicas Tailwind
+                // A economia é tirada APENAS da fatia da máquina
+                const minSavingsLoadR$ = loadCostR$ * minLossPct;
+                const maxSavingsLoadR$ = loadCostR$ * maxLossPct;
+
+                // Contribuição para a variável global do dashboard
+                totalMinGlobalPct += (share * minLossPct);
+                totalMaxGlobalPct += (share * maxLossPct);
+
                 const colorMap = {
                     blue: { text: 'text-apple-blue', bg: 'bg-apple-blue', light: 'bg-blue-50', border: 'border-l-blue-600' },
                     orange: { text: 'text-apple-orange', bg: 'bg-apple-orange', light: 'bg-orange-50', border: 'border-l-orange-500' },
@@ -595,8 +562,7 @@
                 };
                 const c = colorMap[visual.color];
 
-                // Renderiza Card de Oportunidade
-                let insightsHtml = data.insights.map(insight => `
+                let insightsHtml = loadGroup.insights.map(insight => `
                     <div class="mb-4">
                         <div class="flex justify-between text-sm mb-1">
                             <span class="font-semibold text-gray-800">${insight.title}</span>
@@ -608,63 +574,43 @@
                     </div>
                 `).join('');
 
-                let strategicTipsHtml = data.strategicTips.map(tip => `
-                    <div class="bg-white border border-gray-100 rounded-xl shadow-sm flex flex-col gap-0 hover:shadow-md transition-all cursor-default group overflow-hidden h-full">
-                        <div class="h-28 w-full bg-gray-200 relative overflow-hidden">
-                            <img src="${tip.img}" alt="Evidência" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-                            <div class="absolute bottom-3 left-3 right-3 flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-sm shrink-0 border border-white/30">
-                                    <i class="fa-solid ${tip.icon}"></i>
-                                </div>
-                                <h5 class="text-sm font-bold text-white leading-tight drop-shadow-md">${tip.title}</h5>
-                            </div>
-                        </div>
-                        <div class="p-4 bg-white flex-1 flex flex-col justify-center">
-                            <p class="text-xs text-gray-600 leading-relaxed font-medium">${tip.text}</p>
-                        </div>
-                    </div>
-                `).join('');
-
                 const cardHtml = `
                     <div class="glass-card rounded-2xl p-6 md:p-8 slide-up delay-${delayCounter}00 flex flex-col md:flex-row gap-8 items-start border-l-4 ${c.border}">
-                        <div class="w-full md:w-1/3 text-center md:text-left md:sticky md:top-24">
-                            <div class="w-16 h-16 ${c.light} rounded-2xl flex items-center justify-center ${c.text} text-2xl mb-4 mx-auto md:mx-0 shadow-sm">
+                        <div class="w-full md:w-2/5 text-left">
+                            <div class="w-12 h-12 ${c.light} rounded-xl flex items-center justify-center ${c.text} text-xl mb-4 shadow-sm">
                                 <i class="fa-solid ${visual.icon}"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">${data.title}</h3>
-                            <div class="text-xs text-gray-500 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col gap-3 text-left shadow-inner">
-                                <div class="flex gap-2 items-start">
-                                    <i class="fa-solid fa-industry text-gray-400 mt-1"></i>
-                                    <span>No setor <b>${currentSegmentName}</b>, este sistema representa um peso de <b>${sharePct}%</b> na conta final.</span>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">${loadGroup.title}</h3>
+                            
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-4 shadow-sm">
+                                <div class="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200">
+                                    <i class="fa-regular fa-file-pdf text-red-500 text-lg"></i>
+                                    <span class="text-xs font-bold text-gray-700 uppercase tracking-wider">Baseado nos Estudos Anexos</span>
                                 </div>
-                                <div class="flex gap-2 items-start border-t border-gray-200 pt-3">
-                                    <i class="fa-solid fa-bullseye ${c.text} mt-1"></i>
-                                    <span>Os problemas ao lado costumam roubar entre <b>${minPct}% e ${maxPct}%</b> do dinheiro destinado para essa máquina.</span>
-                                </div>
-                            </div>
-                            <div class="bg-white rounded-xl p-4 inline-block w-full border border-gray-100 shadow-sm">
-                                <span class="block text-xs font-semibold text-gray-400 uppercase mb-1">Impacto Financeiro na Carga</span>
-                                <span class="block text-3xl font-bold ${c.text} tracking-tight">${minPct}% <span class="text-lg text-gray-400 font-medium mx-1">a</span> ${maxPct}%</span>
+                                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                                    ${specificData.insightDesc}
+                                </p>
+                                <ul class="text-sm flex flex-col gap-2">
+                                    <li class="flex justify-between items-center text-gray-600">
+                                        <span>Gasto da Carga (${sharePct}%):</span>
+                                        <strong class="text-gray-900">${formatCurrency(loadCostR$)}</strong>
+                                    </li>
+                                    <li class="flex justify-between items-center text-gray-600">
+                                        <span>Desperdício Comprovado:</span>
+                                        <strong class="${c.text}">${(minLossPct*100).toFixed(0)}% a ${(maxLossPct*100).toFixed(0)}%</strong>
+                                    </li>
+                                    <li class="flex justify-between items-center bg-white p-2 rounded-lg border border-gray-100 mt-1 shadow-sm">
+                                        <span class="font-semibold text-gray-800 text-xs">Economia nesta Carga:</span>
+                                        <strong class="text-apple-green text-sm">${formatCurrency(minSavingsLoadR$)} a ${formatCurrency(maxSavingsLoadR$)}</strong>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                         
-                        <div class="w-full md:w-2/3 flex flex-col gap-6">
-                            <!-- Barras de Ineficiência -->
+                        <div class="w-full md:w-3/5 flex flex-col gap-6">
                             <div>
                                 <h4 class="text-sm font-semibold uppercase tracking-wider text-gray-900 mb-4 border-b border-gray-100 pb-2">Origem das Perdas & Ineficiências</h4>
                                 ${insightsHtml}
-                            </div>
-                            
-                            <!-- Dicas Estratégicas Interativas -->
-                            <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-100">
-                                <h4 class="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                                    <i class="fa-solid fa-camera text-gray-500 text-lg"></i>
-                                    Sintomas Visíveis no Chão de Fábrica
-                                </h4>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
-                                    ${strategicTipsHtml}
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -673,49 +619,46 @@
                 delayCounter++;
             });
 
-            // Converte os percentuais para R$ (Reais)
-            const minSavingsMonthly = state.bill * (totalMinGlobalPct / 100);
-            const maxSavingsMonthly = state.bill * (totalMaxGlobalPct / 100);
+            // Converte os percentuais totais para R$ Mensal e Anual
+            const minSavingsMonthly = state.bill * totalMinGlobalPct;
+            const maxSavingsMonthly = state.bill * totalMaxGlobalPct;
+            
             const minSavingsYearly = minSavingsMonthly * 12;
             const maxSavingsYearly = maxSavingsMonthly * 12;
 
-            // Atualiza Texto Explicativo Didático
+            // Alerta Didático Principal
             const didacticNoteEl = document.getElementById('didactic-note');
             if(didacticNoteEl) {
-                const loadNames = state.loads.map(l => {
-                    const group = reportsData[l];
-                    return group ? group.title : l;
-                }).join(" e ");
+                const totalSharePct = (totalTargetLoadShare * 100).toFixed(0);
+                const loadCostGlobalR$ = state.bill * totalTargetLoadShare;
                 
-                didacticNoteEl.innerHTML = `<b>Como chegamos nesta Economia Anual?</b> O simulador cruzou o valor da sua fatura declarada (<b>${formatCurrency(state.bill)}</b>) com o peso que os sistemas de <b>${loadNames}</b> representam especificamente no consumo do setor <b>${currentSegmentName}</b>. Aplicando as taxas de desperdícios catalogadas em auditorias reais do programa, projetamos esse valor em Reais que pode ser economizado anualmente.`;
+                didacticNoteEl.innerHTML = `
+                    <b>Cálculo Transparente (Estudos PotencializEE):</b> A economia projetada não incide sobre sua fatura total. O sistema identificou que, na indústria de <b>${currentSegmentName}</b>, as máquinas selecionadas correspondem a <b>${totalSharePct}%</b> do consumo (<b>${formatCurrency(loadCostGlobalR$)}</b> por mês). O valor verde gigante acima representa a recuperação da energia desperdiçada <b>exclusivamente nestas máquinas</b> durante 1 ano.
+                `;
             }
 
-            // Atualiza Top Dashboard (Animação de números em R$ Anuais)
+            // Animação de números em R$ Anuais no Dashboard
             const yearlySavingsMinEl = document.getElementById('yearly-savings-min');
             const yearlySavingsMaxEl = document.getElementById('yearly-savings-max');
             const opportunityLevelEl = document.getElementById('opportunity-level');
 
-            const animFormatter = (v) => new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(v);
-
-            if (yearlySavingsMinEl) animateValue(yearlySavingsMinEl, 0, minSavingsYearly, 1500, animFormatter);
-            if (yearlySavingsMaxEl) animateValue(yearlySavingsMaxEl, 0, maxSavingsYearly, 1500, animFormatter);
+            if (yearlySavingsMinEl) animateValue(yearlySavingsMinEl, 0, minSavingsYearly, 1500, (v) => formatCurrency(v));
+            if (yearlySavingsMaxEl) animateValue(yearlySavingsMaxEl, 0, maxSavingsYearly, 1500, (v) => formatCurrency(v));
             
-            // Lógica do Nível de Oportunidade
+            // Grau de Oportunidade Global
             let oppLevel = "Baixo";
-            if(totalMaxGlobalPct > 8) oppLevel = "Médio";
-            if(totalMaxGlobalPct >= 15) oppLevel = "Alto";
-            if(totalMaxGlobalPct > 25) oppLevel = "Crítico (Urgente)";
+            if(totalMaxGlobalPct * 100 > 8) oppLevel = "Médio";
+            if(totalMaxGlobalPct * 100 >= 15) oppLevel = "Alto";
+            if(totalMaxGlobalPct * 100 > 25) oppLevel = "Crítico";
             
             if (opportunityLevelEl) {
                 opportunityLevelEl.textContent = oppLevel;
-                // Muda a cor conforme a gravidade
                 opportunityLevelEl.className = "text-4xl md:text-5xl font-bold tracking-tight mb-2 " + 
                     (oppLevel === "Baixo" ? "text-apple-green" : 
                      oppLevel === "Médio" ? "text-yellow-400" : 
                      oppLevel === "Alto" ? "text-orange-400" : "text-red-500");
             }
 
-            // Animação das barras horizontais de ineficiência
             setTimeout(() => {
                 const progressBars = document.querySelectorAll('.progress-bar-fill');
                 progressBars.forEach(bar => {
@@ -723,21 +666,19 @@
                 });
             }, 100);
 
-            // Chama a renderização do gráfico passando os valores reais em R$ MENSAL
+            // Chamada do Gráfico D3
             const avgSavingsMonthly = (minSavingsMonthly + maxSavingsMonthly) / 2;
-            renderD3Chart(state.bill, avgSavingsMonthly);
+            const targetLoadConsumptionR$ = state.bill * totalTargetLoadShare;
+            renderD3Chart(state.bill, avgSavingsMonthly, targetLoadConsumptionR$, totalTargetLoadShare);
         }
 
-        // Função utilitária para animar números (contador)
         function animateValue(obj, start, end, duration, formatter) {
             let startTimestamp = null;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                // Função de easing (easeOutQuart) para suavidade no final
                 const easeOut = 1 - Math.pow(1 - progress, 4);
                 const currentVal = progress * (end - start) + start;
-                // Safety Check: Só atualiza se o objeto (elemento HTML) for válido
                 if (obj) {
                     obj.textContent = formatter ? formatter(currentVal) : Math.floor(currentVal);
                 }
@@ -748,30 +689,28 @@
             window.requestAnimationFrame(step);
         }
 
-        // Renderização do Gráfico com D3.js (Valores Financeiros Reais)
-        function renderD3Chart(baselineBill, avgMonthlySavingsR$) {
+        // Renderização do Gráfico com D3.js (Overlapping / Barras Sobrepostas em Degrau)
+        function renderD3Chart(baselineBill, avgMonthlySavingsR$, targetLoadConsumptionR$, totalTargetLoadShare) {
             const container = d3.select("#savings-chart");
-            container.selectAll("*").remove(); // Limpa gráfico anterior
+            container.selectAll("*").remove();
 
-            // Curva de implantação em 3 meses para estabilização
             const chartData = Array.from({length: 12}, (_, i) => {
                 let savings = 0;
-                if (i === 0) savings = avgMonthlySavingsR$ * 0.33; // Mês 1 (Implantação)
-                else if (i === 1) savings = avgMonthlySavingsR$ * 0.66; // Mês 2 (Ajustes)
-                else savings = avgMonthlySavingsR$; // Mês 3 em diante (Pleno)
+                if (i === 0) savings = avgMonthlySavingsR$ * 0.33; 
+                else if (i === 1) savings = avgMonthlySavingsR$ * 0.66; 
+                else savings = avgMonthlySavingsR$; 
 
                 return {
                     label: window.innerWidth < 600 ? `M${i+1}` : `Mês ${i + 1}`,
-                    consumption: baselineBill - savings,
-                    savings: savings,
-                    total: baselineBill
+                    blue: baselineBill,              // Consumo Total da Fábrica
+                    red: targetLoadConsumptionR$,    // Consumo Específico da Carga Alvo
+                    green: savings                   // Economia Gerada na Carga Alvo
                 };
             });
 
-            // Configurações e dimensões do SVG
             const width = 850;
             const height = 350; 
-            const margin = {top: 40, right: 20, bottom: 40, left: 60};
+            const margin = {top: 50, right: 20, bottom: 40, left: 60};
             const innerWidth = width - margin.left - margin.right;
             const innerHeight = height - margin.top - margin.bottom;
 
@@ -783,34 +722,22 @@
             const g = svg.append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            // Agrupamento dos dados para Barras Sobrepostas (Stack)
-            const stack = d3.stack().keys(["consumption", "savings"]);
-            const series = stack(chartData);
-
-            // Escalas
             const x = d3.scaleBand()
                 .domain(chartData.map(d => d.label))
                 .range([0, innerWidth])
-                .padding(0.35); // Espaçamento entre as barras
+                .padding(0.2); // Espaçamento entre os meses
 
-            // Escala Y com folga no topo para os textos
+            // Escala Y com folga de 15% para o texto no topo caber perfeitamente
             const y = d3.scaleLinear()
                 .domain([0, baselineBill * 1.15]) 
                 .range([innerHeight, 0]);
 
-            const color = d3.scaleOrdinal()
-                .domain(["consumption", "savings"])
-                .range(["#0066cc", "#34c759"]); // Azul para consumo, Verde para economia
-
-            // Eixos
             const xAxis = d3.axisBottom(x).tickSize(0).tickPadding(12);
-                
             const yAxis = d3.axisLeft(y)
                 .ticks(6)
                 .tickSize(-innerWidth)
                 .tickFormat(d => d >= 1000 ? "R$ " + (d / 1000).toFixed(0) + "k" : "R$ " + d);
 
-            // Adiciona Eixo X
             g.append("g")
                 .attr("transform", `translate(0,${innerHeight})`)
                 .call(xAxis)
@@ -819,7 +746,6 @@
                 .attr("font-size", "12px")
                 .call(g => g.select(".domain").attr("stroke", "#e4e4e7"));
 
-            // Adiciona Eixo Y (Grades de fundo)
             g.append("g")
                 .call(yAxis)
                 .attr("color", "#a1a1aa")
@@ -828,64 +754,125 @@
                 .call(g => g.select(".domain").remove())
                 .selectAll("line").attr("stroke", "#f4f4f5").attr("stroke-dasharray", "4,4");
 
-            // Renderiza as Barras Sobrepostas
-            const groups = g.selectAll("g.layer")
-                .data(series)
-                .enter().append("g")
-                .classed("layer", true)
-                .attr("fill", d => color(d.key));
+            // MATEMÁTICA DO DESLOCAMENTO (OFFSET) PARA O EFEITO DEGRAU
+            const bw = x.bandwidth();
+            const barW = bw * 0.5; // A largura real de cada barra será metade da banda total disponível
 
-            const rects = groups.selectAll("rect")
-                .data(d => d)
-                .enter().append("rect")
-                .attr("x", d => x(d.data.label))
-                .attr("y", innerHeight) // Começa no chão para animação
+            const barGroup = g.append("g");
+
+            /* 1. BARRA AZUL (Fundo / Consumo Total) */
+            barGroup.selectAll(".bar-blue")
+                .data(chartData).enter().append("rect")
+                .attr("class", "bar-blue")
+                .attr("fill", "#0066cc")
+                .attr("x", d => x(d.label)) // Inicia exatamente na posição X
+                .attr("y", innerHeight)
+                .attr("width", barW)
                 .attr("height", 0)
-                .attr("width", x.bandwidth())
-                .attr("rx", 4); // Bordas levemente arredondadas
+                .attr("rx", 2)
+                .transition().duration(800)
+                .attr("y", d => y(d.blue))
+                .attr("height", d => innerHeight - y(d.blue));
 
-            // Animação das Barras crescendo
-            rects.transition()
-                .duration(1200)
-                .ease(d3.easeCubicOut)
-                .attr("y", d => y(d[1]))
-                .attr("height", d => y(d[0]) - y(d[1]));
+            /* 2. BARRA VERMELHA (Meio / Carga Alvo) */
+            barGroup.selectAll(".bar-red")
+                .data(chartData).enter().append("rect")
+                .attr("class", "bar-red")
+                .attr("fill", "#ff0000")
+                .attr("x", d => x(d.label) + bw * 0.25) // Deslocada 25% para a direita
+                .attr("y", innerHeight)
+                .attr("width", barW)
+                .attr("height", 0)
+                .attr("rx", 2)
+                .transition().duration(800).delay(200)
+                .attr("y", d => y(d.red))
+                .attr("height", d => innerHeight - y(d.red));
 
-            // Formatador para os Rótulos Fixos (Ex: 135.5k ou 15k)
-            const formatK = (val) => {
-                if (val === 0) return "0";
-                return val >= 1000 ? (val / 1000).toFixed(1).replace('.0', '') + "k" : val;
-            };
-
-            // Grupo de Textos (Aparecem após as barras subirem)
-            const labelsGroup = g.append("g").attr("opacity", 0);
-
-            // Rótulo da Economia (Verde - Fica flutuando acima da barra inteira)
-            labelsGroup.selectAll(".label-savings")
-                .data(chartData)
-                .enter().append("text")
-                .text(d => "+" + formatK(d.savings))
-                .attr("x", d => x(d.label) + x.bandwidth() / 2)
-                .attr("y", d => y(d.total) - 10)
-                .attr("text-anchor", "middle")
+            /* 3. BARRA VERDE (Frente / Economia) */
+            barGroup.selectAll(".bar-green")
+                .data(chartData).enter().append("rect")
+                .attr("class", "bar-green")
                 .attr("fill", "#34c759")
-                .attr("font-size", "12px")
-                .attr("font-weight", "700");
+                .attr("x", d => x(d.label) + bw * 0.50) // Deslocada 50% para a direita
+                .attr("y", innerHeight)
+                .attr("width", barW)
+                .attr("height", 0)
+                .attr("rx", 2)
+                .transition().duration(800).delay(400)
+                .attr("y", d => y(d.green))
+                .attr("height", d => innerHeight - y(d.green));
 
-            // Rótulo do Consumo (Branco - Fica dentro da barra azul, perto do topo)
-            labelsGroup.selectAll(".label-consumption")
-                .data(chartData)
-                .enter().append("text")
-                .text(d => formatK(d.consumption))
-                .attr("x", d => x(d.label) + x.bandwidth() / 2)
-                .attr("y", d => y(d.consumption) + 18) // 18px para baixo do topo da barra azul
+            // RÓTULOS DE DADOS FORMATADOS (Ex: 69,4k)
+            const labels = g.append("g").attr("opacity", 0);
+            const formatK = (val) => (val / 1000).toLocaleString('pt-BR', {maximumFractionDigits: 1}) + "k";
+
+            // Texto Azul (Topo, acima da barra)
+            labels.selectAll(".lbl-blue")
+                .data(chartData).enter().append("text")
+                .text(d => formatK(d.blue))
+                .attr("x", d => x(d.label) + barW / 2)
+                .attr("y", d => y(d.blue) - 8)
                 .attr("text-anchor", "middle")
-                .attr("fill", "#ffffff")
-                .attr("font-size", "11px")
+                .attr("fill", "#1d1d1f")
+                .attr("font-size", "13px")
                 .attr("font-weight", "600");
 
-            // Efeito Fade-in suave para os rótulos após as barras terminarem de subir
-            labelsGroup.transition().delay(1000).duration(800).attr("opacity", 1);
+            // Texto Vermelho (Dentro, próximo ao topo)
+            labels.selectAll(".lbl-red")
+                .data(chartData).enter().append("text")
+                .text(d => (innerHeight - y(d.red)) > 25 ? formatK(d.red) : "") // Oculta se for fina demais
+                .attr("x", d => x(d.label) + bw * 0.25 + barW / 2)
+                .attr("y", d => y(d.red) + 18) 
+                .attr("text-anchor", "middle")
+                .attr("fill", "#ffffff")
+                .attr("font-size", "12px")
+                .attr("font-weight", "600")
+                .style("text-shadow", "0px 1px 2px rgba(0,0,0,0.4)");
+
+            // Texto Verde (Dentro, centralizado verticalmente)
+            labels.selectAll(".lbl-green")
+                .data(chartData).enter().append("text")
+                .text(d => d.green > 0 && (innerHeight - y(d.green)) > 15 ? formatK(d.green) : "")
+                .attr("x", d => x(d.label) + bw * 0.50 + barW / 2)
+                .attr("y", d => y(d.green) + (innerHeight - y(d.green)) / 2 + 4)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#ffffff")
+                .attr("font-size", "12px")
+                .attr("font-weight", "600")
+                .style("text-shadow", "0px 1px 2px rgba(0,0,0,0.3)");
+
+            // Animação de fade-in dos textos após as barras subirem
+            labels.transition().delay(1000).duration(500).attr("opacity", 1);
+
+            // AREA INVISÍVEL PARA CAPTURAR O MOUSE (TOOLTIP INTERATIVO)
+            const tooltip = d3.select("#chart-tooltip");
+            const formatFull = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
+
+            g.selectAll(".overlay")
+                .data(chartData).enter().append("rect")
+                .attr("class", "overlay")
+                .attr("x", d => x(d.label))
+                .attr("y", 0)
+                .attr("width", bw)
+                .attr("height", innerHeight)
+                .attr("fill", "transparent")
+                .style("cursor", "crosshair")
+                .on("mouseover", function(event, d) {
+                    tooltip.style("opacity", 1)
+                        .html(`
+                            <div class="font-bold mb-2 border-b border-gray-600 pb-1">${d.label}</div>
+                            <div class="flex justify-between gap-4 text-xs font-bold text-white mb-2"><span class="text-[#34c759]">Economia (Verde):</span> <span>+ ${formatFull(d.green)}</span></div>
+                            <div class="flex justify-between gap-4 text-xs mb-1"><span class="text-[#ff0000]">Carga Alvo (Vermelho):</span> <span>${formatFull(d.red)}</span></div>
+                            <div class="flex justify-between gap-4 text-xs"><span class="text-[#0066cc]">Consumo Fábrica (Azul):</span> <span>${formatFull(d.blue)}</span></div>
+                        `);
+                })
+                .on("mousemove", function(event) {
+                    tooltip.style("left", (event.pageX + 15) + "px")
+                           .style("top", (event.pageY - 40) + "px");
+                })
+                .on("mouseout", function() {
+                    tooltip.style("opacity", 0);
+                });
         }
     </script>
 </body>
