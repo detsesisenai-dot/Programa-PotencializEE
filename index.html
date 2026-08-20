@@ -314,27 +314,25 @@
             
             <!-- Resumo Financeiro -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 slide-up">
-                <div class="glass-card rounded-3xl p-8 flex flex-col justify-center relative overflow-hidden">
-                    <div class="absolute -right-4 -top-4 text-apple-green opacity-10 text-9xl"><i class="fa-solid fa-piggy-bank"></i></div>
-                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Potencial de Economia Anual</h3>
-                    
-                    <div class="flex flex-wrap items-baseline gap-x-1 mb-2">
-                         <div class="text-2xl font-bold text-gray-400">R$</div>
-                         <div class="text-4xl md:text-5xl font-bold text-apple-dark tracking-tight"><span id="yearly-savings-min">0</span></div>
-                         <div class="text-lg font-medium text-gray-400 mx-2">a</div>
-                         <div class="text-2xl font-bold text-gray-400">R$</div>
-                         <div class="text-4xl md:text-5xl font-bold text-apple-dark tracking-tight"><span id="yearly-savings-max">0</span></div>
-                    </div>
-                   
-                    <p class="text-apple-green font-medium mt-1"><i class="fa-solid fa-arrow-trend-down mr-1"></i> <comment-tag id="1">Estimativa de capital retido no caixa (1 Ano)</comment-tag id="1" text="Estimativa de economia anual na carga alvo" type="suggestion"></p>
-                </div>
-
+                
+                <!-- Card Oportunidade Global (Escuro) -->
                 <div class="glass-card rounded-3xl p-8 flex flex-col justify-center bg-apple-dark text-white shadow-xl relative overflow-hidden">
-                    <div class="absolute -right-4 -bottom-4 text-white opacity-5 text-9xl"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                    <div class="absolute -right-4 -bottom-4 text-white opacity-5 text-9xl"><i class="fa-solid fa-chart-line"></i></div>
                     <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Grau de Oportunidade Global</h3>
                     <div class="text-5xl font-bold tracking-tight mb-2 text-apple-green" id="opportunity-level">Baixo</div>
                     <p class="text-gray-300 font-medium">Classificação baseada nas ineficiências selecionadas.</p>
                 </div>
+
+                <!-- Card Economia Anual (Claro) -->
+                <div class="glass-card rounded-3xl p-8 flex flex-col justify-center bg-white border border-gray-200 shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-4 -bottom-4 text-apple-green opacity-10 text-9xl"><i class="fa-solid fa-piggy-bank"></i></div>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Economia Anual Aproximada</h3>
+                    <div class="text-5xl font-bold tracking-tight mb-2 text-gray-900" id="yearly-savings-avg">R$ 0</div>
+                    <p class="text-apple-green font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-trend-down"></i> Valor estimado na carga alvo (1 Ano)
+                    </p>
+                </div>
+
             </div>
 
             <!-- Explicação Didática (Baseada nos Estudos) -->
@@ -626,24 +624,12 @@
             const minSavingsYearly = minSavingsMonthly * 12;
             const maxSavingsYearly = maxSavingsMonthly * 12;
 
-            // Alerta Didático Principal
-            const didacticNoteEl = document.getElementById('didactic-note');
-            if(didacticNoteEl) {
-                const totalSharePct = (totalTargetLoadShare * 100).toFixed(0);
-                const loadCostGlobalR$ = state.bill * totalTargetLoadShare;
-                
-                didacticNoteEl.innerHTML = `
-                    <b>Cálculo Transparente (Estudos PotencializEE):</b> A economia projetada não incide sobre sua fatura total. O sistema identificou que, na indústria de <b>${currentSegmentName}</b>, as máquinas selecionadas correspondem a <b>${totalSharePct}%</b> do consumo (<b>${formatCurrency(loadCostGlobalR$)}</b> por mês). O valor verde gigante acima representa a recuperação da energia desperdiçada <b>exclusivamente nestas máquinas</b> durante 1 ano.
-                `;
-            }
-
             // Animação de números em R$ Anuais no Dashboard
-            const yearlySavingsMinEl = document.getElementById('yearly-savings-min');
-            const yearlySavingsMaxEl = document.getElementById('yearly-savings-max');
+            const yearlySavingsAvgEl = document.getElementById('yearly-savings-avg');
             const opportunityLevelEl = document.getElementById('opportunity-level');
 
-            if (yearlySavingsMinEl) animateValue(yearlySavingsMinEl, 0, minSavingsYearly, 1500, (v) => formatCurrency(v));
-            if (yearlySavingsMaxEl) animateValue(yearlySavingsMaxEl, 0, maxSavingsYearly, 1500, (v) => formatCurrency(v));
+            const avgSavingsYearly = ((minSavingsMonthly + maxSavingsMonthly) / 2) * 12;
+            if (yearlySavingsAvgEl) animateValue(yearlySavingsAvgEl, 0, avgSavingsYearly, 1500, (v) => formatCurrency(v));
             
             // Grau de Oportunidade Global
             let oppLevel = "Baixo";
