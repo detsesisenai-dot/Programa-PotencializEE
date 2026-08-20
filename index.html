@@ -158,8 +158,7 @@
             <div class="flex justify-between h-16 items-center relative">
                 
                 <div class="flex items-center gap-2 z-10">
-                    <i class="fa-solid fa-leaf text-apple-green text-2xl"></i>
-                    <span class="font-bold text-xl tracking-tight text-apple-dark hidden md:block">Programa <span class="text-apple-blue">Potencializa</span></span>
+                    <img src="https://i.postimg.cc/MTrcQn8S/potencializee.png" alt="Programa PotencializEE" class="h-10 md:h-12 object-contain drop-shadow-sm">
                 </div>
                 
                 <!-- Logo no Canto Superior Direito -->
@@ -314,32 +313,46 @@
         <div id="results-section" class="hidden">
             
             <!-- Resumo Financeiro -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 slide-up">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 slide-up">
                 <div class="glass-card rounded-3xl p-8 flex flex-col justify-center relative overflow-hidden">
                     <div class="absolute -right-4 -top-4 text-apple-green opacity-10 text-9xl"><i class="fa-solid fa-piggy-bank"></i></div>
-                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Potencial de Economia Mensal</h3>
-                    <div class="text-5xl font-bold text-apple-dark tracking-tight mb-2" id="monthly-savings">R$ 0</div>
-                    <p class="text-apple-green font-medium"><i class="fa-solid fa-arrow-trend-down mr-1"></i> Redução estimada de <span id="percent-savings">0</span>%</p>
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Potencial de Economia Anual</h3>
+                    
+                    <div class="flex flex-wrap items-baseline gap-x-1 mb-2">
+                         <div class="text-2xl font-bold text-gray-400">R$</div>
+                         <div class="text-4xl md:text-5xl font-bold text-apple-dark tracking-tight"><span id="yearly-savings-min">0</span></div>
+                         <div class="text-lg font-medium text-gray-400 mx-2">a</div>
+                         <div class="text-2xl font-bold text-gray-400">R$</div>
+                         <div class="text-4xl md:text-5xl font-bold text-apple-dark tracking-tight"><span id="yearly-savings-max">0</span></div>
+                    </div>
+                   
+                    <p class="text-apple-green font-medium mt-1"><i class="fa-solid fa-arrow-trend-down mr-1"></i> Estimativa de capital retido no caixa (1 Ano)</p>
                 </div>
 
                 <div class="glass-card rounded-3xl p-8 flex flex-col justify-center bg-apple-dark text-white shadow-xl relative overflow-hidden">
                     <div class="absolute -right-4 -bottom-4 text-white opacity-5 text-9xl"><i class="fa-solid fa-money-bill-trend-up"></i></div>
-                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Economia Acumulada (12 Meses)</h3>
-                    <div class="text-5xl font-bold tracking-tight mb-2" id="yearly-savings">R$ 0</div>
-                    <p class="text-gray-300 font-medium">Impacto direto no Ebitda e competitividade.</p>
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Grau de Oportunidade Global</h3>
+                    <div class="text-5xl font-bold tracking-tight mb-2 text-apple-green" id="opportunity-level">Baixo</div>
+                    <p class="text-gray-300 font-medium">Classificação baseada nas ineficiências selecionadas.</p>
                 </div>
+            </div>
+
+            <!-- Explicação Didática (Baseada nos Estudos) -->
+            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 mb-8 text-sm text-apple-blue flex items-start gap-3 slide-up delay-100 shadow-sm">
+                <i class="fa-solid fa-circle-info text-2xl mt-0.5"></i>
+                <p id="didactic-note" class="leading-relaxed"></p>
             </div>
 
             <!-- Gráfico de Evolução (D3.js) -->
             <div class="glass-card rounded-3xl p-6 md:p-8 mb-12 slide-up delay-200">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4 border-b border-gray-100 pb-4">
                     <div>
                         <h3 class="text-xl font-bold text-apple-dark mb-1">Evolução de Consumo Mensal (1 Ano)</h3>
-                        <p class="text-sm text-gray-500">Comparativo do custo com energia: Sem ação vs. Implantação das melhorias.</p>
+                        <p class="text-sm text-gray-500">Comparativo financeiro: O custo da energia vs. O ganho da eficiência.</p>
                     </div>
-                    <div class="flex gap-4 text-xs font-semibold bg-gray-50 p-2 rounded-lg border border-gray-100">
-                        <div class="flex items-center gap-1.5 text-gray-500"><span class="w-3 h-0.5 bg-red-400 border border-dashed border-red-400 inline-block"></span> Sem Ação</div>
-                        <div class="flex items-center gap-1.5 text-apple-green"><span class="w-3 h-0.5 bg-apple-green inline-block"></span> Com Potencializa</div>
+                    <div class="flex flex-col sm:flex-row gap-4 text-xs font-semibold bg-gray-50 p-2 rounded-lg border border-gray-100 mt-4 md:mt-0">
+                        <div class="flex items-center gap-2 text-gray-600"><span class="w-3 h-3 rounded-sm bg-[#0066cc] inline-block shadow-sm"></span> Média de Consumo Mensal</div>
+                        <div class="flex items-center gap-2 text-apple-green"><span class="w-3 h-3 rounded-sm bg-[#34c759] inline-block shadow-sm"></span> Economia Média Carga Alvo Mensal</div>
                     </div>
                 </div>
                 <div id="savings-chart" class="w-full relative" style="min-height: 250px;">
@@ -360,12 +373,9 @@
                 <div class="relative z-10">
                     <h2 class="text-3xl font-bold mb-4">Transforme Perdas em Lucro</h2>
                     <p class="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-                        O <strong class="text-white">Programa Potencializa</strong> oferece consultoria especializada com metodologia SENAI. Identificamos, quantificamos e propomos soluções exatas para a sua indústria fazer mais com menos energia.
+                        O <strong class="text-white">Programa PotencializEE</strong> oferece consultoria especializada com metodologia SENAI. Identificamos, quantificamos e propomos soluções exatas para a sua indústria fazer mais com menos energia.
                     </p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button class="bg-white text-apple-blue font-semibold rounded-full px-8 py-3 hover:bg-gray-50 transition shadow-lg">
-                            Falar com um Consultor
-                        </button>
                         <button id="recalculate-btn" class="border border-white/30 text-white font-medium rounded-full px-8 py-3 hover:bg-white/10 transition">
                             Nova Simulação
                         </button>
@@ -484,9 +494,9 @@
         const setupSection = document.getElementById('setup-section');
         const resultsSection = document.getElementById('results-section');
         
-        const monthlySavingsEl = document.getElementById('monthly-savings');
-        const yearlySavingsEl = document.getElementById('yearly-savings');
-        const percentSavingsEl = document.getElementById('percent-savings');
+        const monthlySavingsMinEl = document.getElementById('monthly-savings-min');
+        const monthlySavingsMaxEl = document.getElementById('monthly-savings-max');
+        const opportunityLevelEl = document.getElementById('opportunity-level');
         const opportunitiesContainer = document.getElementById('opportunities-container');
         const recalculateBtn = document.getElementById('recalculate-btn');
 
@@ -540,31 +550,50 @@
         });
 
         function calculateAndRender() {
-            let totalEstimatedSavings = 0;
-            opportunitiesContainer.innerHTML = ''; // Limpa cards anteriores
+            let totalMinGlobalPct = 0;
+            let totalMaxGlobalPct = 0;
+            opportunitiesContainer.innerHTML = ''; 
 
             let delayCounter = 1;
 
+            const segmentNames = {
+                alimentos: "Alimentos & Bebidas",
+                metalmecanica: "Metalmecânica",
+                vestuario: "Vestuário",
+                quimico: "Farmoquímico & Sintéticos",
+                sucroenergetico: "Açúcar, Etanol & Cogeração"
+            };
+            const currentSegmentName = segmentNames[state.segment];
+
             state.loads.forEach(loadKey => {
-                const data = reportsData[loadKey];
+                const loadGroup = reportsData[loadKey];
                 
-                // Determina o peso da carga baseado no segmento (ex: Frigorifico gasta mais refrigeração)
-                const share = data.shareMultiplier[state.segment] || data.shareMultiplier.default;
+                // Trava de segurança: Se o segmento específico não estiver mapeado para esta carga, usa o cenário default/geral.
+                const data = loadGroup.segments && loadGroup.segments[state.segment] ? loadGroup.segments[state.segment] : loadGroup;
+                const visual = loadGroup.visual || { icon: loadGroup.icon, color: loadGroup.color };
                 
-                // Custo estimado desta carga na fatura
-                const loadCost = state.bill * share;
+                // Determina o peso da carga baseado no segmento selecionado
+                const share = data.shareMultiplier && data.shareMultiplier[state.segment] ? data.shareMultiplier[state.segment] : (data.shareMultiplier ? data.shareMultiplier.default : 0.2);
+                const sharePct = (share * 100).toFixed(0);
                 
-                // Economia mensal nesta carga (Custo da carga * Percentual médio de perda)
-                const loadSavings = loadCost * data.avgLosses;
-                totalEstimatedSavings += loadSavings;
+                // Ranges da carga específica em percentual decimal
+                const minPct = Math.round((data.avgLosses - 0.05) * 100);
+                const maxPct = Math.round((data.avgLosses + 0.05) * 100);
+
+                // Contribuição para a redução global da fatura
+                const globalMin = share * (data.avgLosses - 0.05);
+                const globalMax = share * (data.avgLosses + 0.05);
+                
+                totalMinGlobalPct += globalMin * 100;
+                totalMaxGlobalPct += globalMax * 100;
 
                 // Cores dinâmicas Tailwind
                 const colorMap = {
-                    blue: { text: 'text-apple-blue', bg: 'bg-apple-blue', light: 'bg-blue-50' },
-                    orange: { text: 'text-apple-orange', bg: 'bg-apple-orange', light: 'bg-orange-50' },
-                    gray: { text: 'text-gray-700', bg: 'bg-gray-700', light: 'bg-gray-100' }
+                    blue: { text: 'text-apple-blue', bg: 'bg-apple-blue', light: 'bg-blue-50', border: 'border-l-blue-600' },
+                    orange: { text: 'text-apple-orange', bg: 'bg-apple-orange', light: 'bg-orange-50', border: 'border-l-orange-500' },
+                    gray: { text: 'text-gray-700', bg: 'bg-gray-700', light: 'bg-gray-100', border: 'border-l-gray-600' }
                 };
-                const c = colorMap[data.color];
+                const c = colorMap[visual.color];
 
                 // Renderiza Card de Oportunidade
                 let insightsHtml = data.insights.map(insight => `
@@ -591,33 +620,39 @@
                                 <h5 class="text-sm font-bold text-white leading-tight drop-shadow-md">${tip.title}</h5>
                             </div>
                         </div>
-                        <div class="p-4 bg-white flex-1">
-                            <p class="text-xs text-gray-600 leading-relaxed">${tip.text}</p>
+                        <div class="p-4 bg-white flex-1 flex flex-col justify-center">
+                            <p class="text-xs text-gray-600 leading-relaxed font-medium">${tip.text}</p>
                         </div>
                     </div>
                 `).join('');
 
                 const cardHtml = `
-                    <div class="glass-card rounded-2xl p-6 md:p-8 slide-up delay-${delayCounter}00 flex flex-col md:flex-row gap-8 items-start border-l-4 border-l-${c.bg.replace('bg-', '')}">
+                    <div class="glass-card rounded-2xl p-6 md:p-8 slide-up delay-${delayCounter}00 flex flex-col md:flex-row gap-8 items-start border-l-4 ${c.border}">
                         <div class="w-full md:w-1/3 text-center md:text-left md:sticky md:top-24">
                             <div class="w-16 h-16 ${c.light} rounded-2xl flex items-center justify-center ${c.text} text-2xl mb-4 mx-auto md:mx-0 shadow-sm">
-                                <i class="fa-solid ${data.icon}"></i>
+                                <i class="fa-solid ${visual.icon}"></i>
                             </div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">${data.title}</h3>
-                            <div class="text-xs text-gray-500 mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100 flex gap-2 text-left">
-                                <i class="fa-solid fa-circle-info text-blue-400 mt-0.5"></i>
-                                <span>Estes valores são <b>estimativas teóricas aproximadas</b> calculadas por matrizes de ponderação do setor.</span>
+                            <div class="text-xs text-gray-500 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col gap-3 text-left shadow-inner">
+                                <div class="flex gap-2 items-start">
+                                    <i class="fa-solid fa-industry text-gray-400 mt-1"></i>
+                                    <span>No setor <b>${currentSegmentName}</b>, este sistema representa um peso de <b>${sharePct}%</b> na conta final.</span>
+                                </div>
+                                <div class="flex gap-2 items-start border-t border-gray-200 pt-3">
+                                    <i class="fa-solid fa-bullseye ${c.text} mt-1"></i>
+                                    <span>Os problemas ao lado costumam roubar entre <b>${minPct}% e ${maxPct}%</b> do dinheiro destinado para essa máquina.</span>
+                                </div>
                             </div>
-                            <div class="bg-gray-50 rounded-xl p-4 inline-block w-full border border-gray-100 shadow-inner">
-                                <span class="block text-xs font-semibold text-gray-400 uppercase">Potencial Recuperável (Est.)</span>
-                                <span class="block text-2xl md:text-3xl font-bold ${c.text} mt-1">${formatCurrency(loadSavings)}<span class="text-sm font-medium text-gray-400">/mês</span></span>
+                            <div class="bg-white rounded-xl p-4 inline-block w-full border border-gray-100 shadow-sm">
+                                <span class="block text-xs font-semibold text-gray-400 uppercase mb-1">Impacto Financeiro na Carga</span>
+                                <span class="block text-3xl font-bold ${c.text} tracking-tight">${minPct}% <span class="text-lg text-gray-400 font-medium mx-1">a</span> ${maxPct}%</span>
                             </div>
                         </div>
                         
                         <div class="w-full md:w-2/3 flex flex-col gap-6">
                             <!-- Barras de Ineficiência -->
                             <div>
-                                <h4 class="text-sm font-semibold uppercase tracking-wider text-gray-900 mb-4 border-b border-gray-100 pb-2">Onde os desperdícios ocorrem?</h4>
+                                <h4 class="text-sm font-semibold uppercase tracking-wider text-gray-900 mb-4 border-b border-gray-100 pb-2">Origem das Perdas & Ineficiências</h4>
                                 ${insightsHtml}
                             </div>
                             
@@ -625,7 +660,7 @@
                             <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-100">
                                 <h4 class="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                     <i class="fa-solid fa-camera text-gray-500 text-lg"></i>
-                                    Evidências em Campo e Sintomas Técnicos
+                                    Sintomas Visíveis no Chão de Fábrica
                                 </h4>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
                                     ${strategicTipsHtml}
@@ -638,36 +673,74 @@
                 delayCounter++;
             });
 
-            // Atualiza Top Dashboard (Animação de números)
-            const percentTotal = (totalEstimatedSavings / state.bill) * 100;
-            animateValue(monthlySavingsEl, 0, totalEstimatedSavings, 1500, formatCurrency);
-            animateValue(yearlySavingsEl, 0, totalEstimatedSavings * 12, 1500, formatCurrency);
-            animateValue(percentSavingsEl, 0, percentTotal, 1500, (v) => v.toFixed(1));
+            // Converte os percentuais para R$ (Reais)
+            const minSavingsMonthly = state.bill * (totalMinGlobalPct / 100);
+            const maxSavingsMonthly = state.bill * (totalMaxGlobalPct / 100);
+            const minSavingsYearly = minSavingsMonthly * 12;
+            const maxSavingsYearly = maxSavingsMonthly * 12;
 
-            // Renderiza gráfico do D3.js após transição
-            setTimeout(() => {
-                renderD3Chart(totalEstimatedSavings);
-            }, 300);
+            // Atualiza Texto Explicativo Didático
+            const didacticNoteEl = document.getElementById('didactic-note');
+            if(didacticNoteEl) {
+                const loadNames = state.loads.map(l => {
+                    const group = reportsData[l];
+                    return group ? group.title : l;
+                }).join(" e ");
+                
+                didacticNoteEl.innerHTML = `<b>Como chegamos nesta Economia Anual?</b> O simulador cruzou o valor da sua fatura declarada (<b>${formatCurrency(state.bill)}</b>) com o peso que os sistemas de <b>${loadNames}</b> representam especificamente no consumo do setor <b>${currentSegmentName}</b>. Aplicando as taxas de desperdícios catalogadas em auditorias reais do programa, projetamos esse valor em Reais que pode ser economizado anualmente.`;
+            }
 
-            // Dispara animação das barras de progresso após um leve delay
+            // Atualiza Top Dashboard (Animação de números em R$ Anuais)
+            const yearlySavingsMinEl = document.getElementById('yearly-savings-min');
+            const yearlySavingsMaxEl = document.getElementById('yearly-savings-max');
+            const opportunityLevelEl = document.getElementById('opportunity-level');
+
+            const animFormatter = (v) => new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(v);
+
+            if (yearlySavingsMinEl) animateValue(yearlySavingsMinEl, 0, minSavingsYearly, 1500, animFormatter);
+            if (yearlySavingsMaxEl) animateValue(yearlySavingsMaxEl, 0, maxSavingsYearly, 1500, animFormatter);
+            
+            // Lógica do Nível de Oportunidade
+            let oppLevel = "Baixo";
+            if(totalMaxGlobalPct > 8) oppLevel = "Médio";
+            if(totalMaxGlobalPct >= 15) oppLevel = "Alto";
+            if(totalMaxGlobalPct > 25) oppLevel = "Crítico (Urgente)";
+            
+            if (opportunityLevelEl) {
+                opportunityLevelEl.textContent = oppLevel;
+                // Muda a cor conforme a gravidade
+                opportunityLevelEl.className = "text-4xl md:text-5xl font-bold tracking-tight mb-2 " + 
+                    (oppLevel === "Baixo" ? "text-apple-green" : 
+                     oppLevel === "Médio" ? "text-yellow-400" : 
+                     oppLevel === "Alto" ? "text-orange-400" : "text-red-500");
+            }
+
+            // Animação das barras horizontais de ineficiência
             setTimeout(() => {
-                document.querySelectorAll('.progress-bar-fill').forEach(bar => {
-                    bar.style.width = bar.getAttribute('data-target');
+                const progressBars = document.querySelectorAll('.progress-bar-fill');
+                progressBars.forEach(bar => {
+                    bar.style.width = bar.dataset.target;
                 });
-            }, 500);
+            }, 100);
+
+            // Chama a renderização do gráfico passando os valores reais em R$ MENSAL
+            const avgSavingsMonthly = (minSavingsMonthly + maxSavingsMonthly) / 2;
+            renderD3Chart(state.bill, avgSavingsMonthly);
         }
 
-        // Função de Animação de Números
-        function animateValue(obj, start, end, duration, formatFn) {
+        // Função utilitária para animar números (contador)
+        function animateValue(obj, start, end, duration, formatter) {
             let startTimestamp = null;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                // Função de easing out cubic
-                const easeProgress = 1 - Math.pow(1 - progress, 3);
-                const currentVal = start + easeProgress * (end - start);
-                
-                obj.innerHTML = formatFn(currentVal);
+                // Função de easing (easeOutQuart) para suavidade no final
+                const easeOut = 1 - Math.pow(1 - progress, 4);
+                const currentVal = progress * (end - start) + start;
+                // Safety Check: Só atualiza se o objeto (elemento HTML) for válido
+                if (obj) {
+                    obj.textContent = formatter ? formatter(currentVal) : Math.floor(currentVal);
+                }
                 if (progress < 1) {
                     window.requestAnimationFrame(step);
                 }
@@ -675,78 +748,67 @@
             window.requestAnimationFrame(step);
         }
 
-        // Renderização do Gráfico com D3.js
-        function renderD3Chart(monthlySavings) {
+        // Renderização do Gráfico com D3.js (Valores Financeiros Reais)
+        function renderD3Chart(baselineBill, avgMonthlySavingsR$) {
             const container = d3.select("#savings-chart");
             container.selectAll("*").remove(); // Limpa gráfico anterior
 
-            // Gera dados comparativos (Simulando uma curva de implantação de 3 meses para atingir a economia máxima)
-            const baselineValue = state.bill;
-            
+            // Curva de implantação em 3 meses para estabilização
             const chartData = Array.from({length: 12}, (_, i) => {
-                let currentSavings = 0;
-                // Curva de ramp-up da economia (0 a 100% em 3 meses)
-                if (i === 0) currentSavings = monthlySavings * 0.3; // Mês 1: 30% da economia
-                else if (i === 1) currentSavings = monthlySavings * 0.7; // Mês 2: 70% da economia
-                else currentSavings = monthlySavings; // Mês 3 em diante: 100% da economia
+                let savings = 0;
+                if (i === 0) savings = avgMonthlySavingsR$ * 0.33; // Mês 1 (Implantação)
+                else if (i === 1) savings = avgMonthlySavingsR$ * 0.66; // Mês 2 (Ajustes)
+                else savings = avgMonthlySavingsR$; // Mês 3 em diante (Pleno)
 
                 return {
-                    month: i + 1,
-                    label: `M${i + 1}`, // Label curto para caber em telas mobile
-                    baseline: baselineValue,
-                    impacted: baselineValue - currentSavings,
-                    savings: currentSavings
+                    label: window.innerWidth < 600 ? `M${i+1}` : `Mês ${i + 1}`,
+                    consumption: baselineBill - savings,
+                    savings: savings,
+                    total: baselineBill
                 };
             });
 
-            // Configurações e dimensões do SVG (Responsivo com viewBox)
-            const width = 800;
-            const height = 300;
-            const margin = {top: 20, right: 20, bottom: 40, left: 70};
+            // Configurações e dimensões do SVG
+            const width = 850;
+            const height = 350; 
+            const margin = {top: 40, right: 20, bottom: 40, left: 60};
             const innerWidth = width - margin.left - margin.right;
             const innerHeight = height - margin.top - margin.bottom;
 
             const svg = container.append("svg")
                 .attr("viewBox", `0 0 ${width} ${height}`)
                 .attr("preserveAspectRatio", "xMidYMid meet")
-                .attr("class", "w-full h-full drop-shadow-sm");
+                .attr("class", "w-full h-full");
 
             const g = svg.append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            // Definição do Gradiente da Área de Economia (Abaixo da linha impactada)
-            const defs = svg.append("defs");
-            const gradient = defs.append("linearGradient")
-                .attr("id", "area-gradient")
-                .attr("x1", "0%").attr("y1", "0%")
-                .attr("x2", "0%").attr("y2", "100%");
-            gradient.append("stop")
-                .attr("offset", "0%")
-                .attr("stop-color", "#34c759").attr("stop-opacity", 0.3);
-            gradient.append("stop")
-                .attr("offset", "100%")
-                .attr("stop-color", "#34c759").attr("stop-opacity", 0.0);
+            // Agrupamento dos dados para Barras Sobrepostas (Stack)
+            const stack = d3.stack().keys(["consumption", "savings"]);
+            const series = stack(chartData);
 
             // Escalas
-            const x = d3.scalePoint()
+            const x = d3.scaleBand()
                 .domain(chartData.map(d => d.label))
                 .range([0, innerWidth])
-                .padding(0.1);
+                .padding(0.35); // Espaçamento entre as barras
 
-            // Escala Y começando de 0 até 15% acima do valor base para dar respiro
+            // Escala Y com folga no topo para os textos
             const y = d3.scaleLinear()
-                .domain([0, baselineValue * 1.15]) 
+                .domain([0, baselineBill * 1.15]) 
                 .range([innerHeight, 0]);
 
+            const color = d3.scaleOrdinal()
+                .domain(["consumption", "savings"])
+                .range(["#0066cc", "#34c759"]); // Azul para consumo, Verde para economia
+
             // Eixos
-            const xAxis = d3.axisBottom(x)
-                .tickSize(-5)
-                .tickPadding(10);
+            const xAxis = d3.axisBottom(x).tickSize(0).tickPadding(12);
                 
             const yAxis = d3.axisLeft(y)
-                .ticks(5)
+                .ticks(6)
                 .tickSize(-innerWidth)
-                .tickFormat(d => new Intl.NumberFormat('pt-BR', { notation: "compact", compactDisplay: "short", style: "currency", currency: "BRL" }).format(d));
+                .tickFormat(d => d >= 1000 ? "R$ " + (d / 1000).toFixed(0) + "k" : "R$ " + d);
 
             // Adiciona Eixo X
             g.append("g")
@@ -755,10 +817,9 @@
                 .attr("color", "#a1a1aa") 
                 .attr("font-family", "Inter")
                 .attr("font-size", "12px")
-                .call(g => g.select(".domain").remove())
-                .selectAll("line").attr("stroke", "#f4f4f5");
+                .call(g => g.select(".domain").attr("stroke", "#e4e4e7"));
 
-            // Adiciona Eixo Y
+            // Adiciona Eixo Y (Grades de fundo)
             g.append("g")
                 .call(yAxis)
                 .attr("color", "#a1a1aa")
@@ -767,111 +828,64 @@
                 .call(g => g.select(".domain").remove())
                 .selectAll("line").attr("stroke", "#f4f4f5").attr("stroke-dasharray", "4,4");
 
-            // Geradores de Linha e Área
-            const lineBaseline = d3.line()
-                .x(d => x(d.label))
-                .y(d => y(d.baseline));
+            // Renderiza as Barras Sobrepostas
+            const groups = g.selectAll("g.layer")
+                .data(series)
+                .enter().append("g")
+                .classed("layer", true)
+                .attr("fill", d => color(d.key));
 
-            const lineImpacted = d3.line()
-                .x(d => x(d.label))
-                .y(d => y(d.impacted))
-                .curve(d3.curveMonotoneX); // Curva suave na queda
+            const rects = groups.selectAll("rect")
+                .data(d => d)
+                .enter().append("rect")
+                .attr("x", d => x(d.data.label))
+                .attr("y", innerHeight) // Começa no chão para animação
+                .attr("height", 0)
+                .attr("width", x.bandwidth())
+                .attr("rx", 4); // Bordas levemente arredondadas
 
-            const area = d3.area()
-                .x(d => x(d.label))
-                .y0(innerHeight)
-                .y1(d => y(d.impacted))
-                .curve(d3.curveMonotoneX);
-
-            // Adiciona Área com Gradiente (Consumo Real após implantação)
-            g.append("path")
-                .datum(chartData)
-                .attr("fill", "url(#area-gradient)")
-                .attr("d", area)
-                .attr("opacity", 0)
-                .transition()
-                .duration(1500)
-                .attr("opacity", 1);
-
-            // Adiciona Linha Base (Sem Ação - Tracejada)
-            g.append("path")
-                .datum(chartData)
-                .attr("fill", "none")
-                .attr("stroke", "#ff8a80") // Vermelho claro
-                .attr("stroke-width", 2)
-                .attr("stroke-dasharray", "6,4")
-                .attr("d", lineBaseline);
-
-            // Adiciona Linha Impactada (Animada)
-            const pathImpacted = g.append("path")
-                .datum(chartData)
-                .attr("fill", "none")
-                .attr("stroke", "#34c759") // Verde Apple
-                .attr("stroke-width", 3)
-                .attr("d", lineImpacted);
-
-            const totalLength = pathImpacted.node().getTotalLength();
-
-            pathImpacted.attr("stroke-dasharray", totalLength + " " + totalLength)
-                .attr("stroke-dashoffset", totalLength)
-                .transition()
-                .duration(1500)
+            // Animação das Barras crescendo
+            rects.transition()
+                .duration(1200)
                 .ease(d3.easeCubicOut)
-                .attr("stroke-dashoffset", 0);
+                .attr("y", d => y(d[1]))
+                .attr("height", d => y(d[0]) - y(d[1]));
 
-            // Tooltip e Interatividade (Pontos no Gráfico)
-            const tooltip = d3.select("#chart-tooltip");
+            // Formatador para os Rótulos Fixos (Ex: 135.5k ou 15k)
+            const formatK = (val) => {
+                if (val === 0) return "0";
+                return val >= 1000 ? (val / 1000).toFixed(1).replace('.0', '') + "k" : val;
+            };
 
-            // Pontos da Linha Impactada
-            g.selectAll(".dot")
+            // Grupo de Textos (Aparecem após as barras subirem)
+            const labelsGroup = g.append("g").attr("opacity", 0);
+
+            // Rótulo da Economia (Verde - Fica flutuando acima da barra inteira)
+            labelsGroup.selectAll(".label-savings")
                 .data(chartData)
-                .enter().append("circle")
-                .attr("class", "dot")
-                .attr("cx", d => x(d.label))
-                .attr("cy", d => y(d.impacted))
-                .attr("r", 5)
+                .enter().append("text")
+                .text(d => "+" + formatK(d.savings))
+                .attr("x", d => x(d.label) + x.bandwidth() / 2)
+                .attr("y", d => y(d.total) - 10)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#34c759")
+                .attr("font-size", "12px")
+                .attr("font-weight", "700");
+
+            // Rótulo do Consumo (Branco - Fica dentro da barra azul, perto do topo)
+            labelsGroup.selectAll(".label-consumption")
+                .data(chartData)
+                .enter().append("text")
+                .text(d => formatK(d.consumption))
+                .attr("x", d => x(d.label) + x.bandwidth() / 2)
+                .attr("y", d => y(d.consumption) + 18) // 18px para baixo do topo da barra azul
+                .attr("text-anchor", "middle")
                 .attr("fill", "#ffffff")
-                .attr("stroke", "#34c759")
-                .attr("stroke-width", 2)
-                .attr("opacity", 0)
-                .on("mouseover", function(event, d) {
-                    d3.select(this).attr("r", 8).attr("fill", "#34c759");
-                    tooltip.transition().duration(200).style("opacity", 1);
-                    
-                    // Conteúdo detalhado do tooltip
-                    tooltip.html(`
-                        <div class="font-bold text-gray-200 mb-2 border-b border-gray-600 pb-1">Mês ${d.month}</div>
-                        <div class="flex justify-between items-center text-red-300 mb-1 gap-4">
-                            <span>Média Atual:</span> 
-                            <span>${formatCurrency(d.baseline)}</span>
-                        </div>
-                        <div class="flex justify-between items-center text-green-400 mb-2 gap-4">
-                            <span>Com Otimização:</span> 
-                            <span class="font-bold">${formatCurrency(d.impacted)}</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-white/10 p-1.5 rounded text-white gap-4">
-                            <span>Economia:</span> 
-                            <span class="font-bold">${formatCurrency(d.savings)}</span>
-                        </div>
-                    `);
+                .attr("font-size", "11px")
+                .attr("font-weight", "600");
 
-                    // Lógica para manter o tooltip dentro da tela (Responsividade Mobile)
-                    let xPosition = event.pageX - 100;
-                    if (xPosition < 10) xPosition = 10; // Não deixa sumir na esquerda
-                    if (xPosition + 220 > window.innerWidth) xPosition = window.innerWidth - 230; // Não deixa sumir na direita
-
-                    tooltip
-                        .style("left", xPosition + "px")
-                        .style("top", (event.pageY - 110) + "px");
-                })
-                .on("mouseout", function() {
-                    d3.select(this).attr("r", 5).attr("fill", "#ffffff");
-                    tooltip.transition().duration(500).style("opacity", 0);
-                })
-                .transition()
-                .delay((d, i) => i * 125)
-                .duration(500)
-                .attr("opacity", 1);
+            // Efeito Fade-in suave para os rótulos após as barras terminarem de subir
+            labelsGroup.transition().delay(1000).duration(800).attr("opacity", 1);
         }
     </script>
 </body>
